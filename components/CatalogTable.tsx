@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { formatCOP } from "@/lib/utils/money";
 import type { ProductRow } from "@/lib/db/products";
+import { addToActiveList } from "@/lib/actions/checklist";
 
 const CATEGORIES = [
   "Todas",
@@ -23,7 +24,35 @@ const CATEGORIES = [
 
 type SortDir = "asc" | "desc" | null;
 
-export function CatalogTable({ products }: { products: ProductRow[] }) {
+function AddButton({ storeId, productId }: { storeId: string; productId: string }) {
+  const [isPending, startTransition] = useTransition();
+  const [added, setAdded] = useState(false);
+
+  return (
+    <button
+      type="button"
+      disabled={isPending}
+      onClick={() =>
+        startTransition(async () => {
+          await addToActiveList(storeId, productId);
+          setAdded(true);
+          setTimeout(() => setAdded(false), 1500);
+        })
+      }
+      className="rounded-md border border-neutral-300 px-2 py-1 text-xs font-medium text-neutral-700 hover:border-emerald-400 hover:text-emerald-700 disabled:opacity-50"
+    >
+      {added ? "Agregado ✓" : "Agregar"}
+    </button>
+  );
+}
+
+export function CatalogTable({
+  products,
+  storeId,
+}: {
+  products: ProductRow[];
+  storeId: string;
+}) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Todas");
   const [sortDir, setSortDir] = useState<SortDir>(null);
@@ -97,6 +126,7 @@ export function CatalogTable({ products }: { products: ProductRow[] }) {
               <th className="px-3 py-2">Producto</th>
               <th className="px-3 py-2">Categoría</th>
               <th className="px-3 py-2 text-right">Precio</th>
+              <th className="px-3 py-2"></th>
             </tr>
           </thead>
           <tbody>
@@ -110,6 +140,9 @@ export function CatalogTable({ products }: { products: ProductRow[] }) {
                 </td>
                 <td className="px-3 py-2 text-right tabular-nums">
                   {formatCOP(p.price_cop)}
+                </td>
+                <td className="px-3 py-2 text-right">
+                  <AddButton storeId={storeId} productId={p.id} />
                 </td>
               </tr>
             ))}

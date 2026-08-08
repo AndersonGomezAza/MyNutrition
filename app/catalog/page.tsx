@@ -61,7 +61,7 @@ export default async function CatalogPage({ searchParams }: Props) {
       {products.length === 0 ? (
         <SetupNotice error={`Aún no hay productos de ${activeStore.display_name} en la base de datos. Corre el scraper manualmente (GET /api/cron/scrape con el header Authorization: Bearer <CRON_SECRET>) para poblarla.`} />
       ) : (
-        <CatalogTable products={products} />
+        <CatalogTable products={products} storeId={activeStore.id} />
       )}
     </div>
   );
