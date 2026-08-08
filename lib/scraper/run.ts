@@ -2,11 +2,19 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { fetchCatalogPage } from "./fetchPage";
 import { isLastPage, parseCatalogPage } from "./parseCatalogHtml";
-import { upsertScrapedProduct } from "../db/products";
+import { upsertProductBatch } from "../db/products";
 import { listActiveStores, type StoreRow } from "../db/stores";
 
 const MAX_PAGES = 150; // safety ceiling; the real stop condition is isLastPage()
 const MAX_CONSECUTIVE_ANOMALIES = 2;
+// Batched DB upserts made the loop fast enough to get a 429 from
+// losprecios.co with no delay at all between pages. This is comfortably
+// inside the 300s function budget even at ~150 pages across both stores.
+const PAGE_DELAY_MS = 400;
+
+function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
+}
 
 export type StoreScrapeResult = {
   storeSlug: string;
@@ -48,6 +56,8 @@ async function scrapeStore(
   let upserted = 0;
 
   while (page <= MAX_PAGES) {
+    if (page > 1) await sleep(PAGE_DELAY_MS);
+
     let html: string;
     try {
       html = await fetchCatalogPage(store.source_path, page);
@@ -80,10 +90,8 @@ async function scrapeStore(
       }
     } else {
       consecutiveAnomalies = 0;
-      for (const product of products) {
-        await upsertScrapedProduct(supabase, store.id, product);
-        upserted++;
-      }
+      await upsertProductBatch(supabase, store.id, products);
+      upserted += products.length;
     }
 
     page++;
@@ -129,7 +137,8 @@ async function finishRun(
 export async function scrapeAllActiveStores(supabase: SupabaseClient<any>) {
   const stores = await listActiveStores(supabase);
   const results: StoreScrapeResult[] = [];
-  for (const store of stores) {
+  for (const [index, store] of stores.entries()) {
+    if (index > 0) await sleep(PAGE_DELAY_MS);
     results.push(await scrapeStore(supabase, store));
   }
   return results;

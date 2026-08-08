@@ -4,53 +4,69 @@ import type { ScrapedProduct } from "../scraper/parseCatalogHtml";
 import { categorizeProduct } from "../scraper/categorize";
 
 /**
- * Upserts one product and appends to price history only when the price
- * actually changed — keeps history cheap on unchanged weekly re-scrapes.
- * Runs one row at a time (not batched) so a mid-run failure never loses
- * already-committed rows; see run.ts for the resilience rationale.
+ * Upserts a whole page's worth of products (~10) in 2-3 DB round trips total
+ * instead of one round trip per product. The original per-product version
+ * (select-then-upsert-then-maybe-insert-history for each item) measured at
+ * ~5.5 minutes for Ara's 677 products against a live Supabase project —
+ * uncomfortably close to Vercel's 300s function ceiling, and it left D1's
+ * run stuck mid-page when a client disconnect aborted the request. Batching
+ * per page keeps the "upsert as soon as parsed" resilience property (a
+ * failure only loses at most one page's worth of unwritten rows, not the
+ * whole run) while cutting DB round trips by roughly 10x.
  */
-export async function upsertScrapedProduct(
+export async function upsertProductBatch(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: SupabaseClient<any>,
   storeId: string,
-  product: ScrapedProduct
+  products: ScrapedProduct[]
 ): Promise<void> {
-  const { category, foodGroup } = categorizeProduct(product.name);
+  if (products.length === 0) return;
 
-  const { data: existing } = await supabase
+  const externalIds = products.map((p) => p.externalId);
+  const { data: existingRows, error: selectError } = await supabase
     .from("products")
-    .select("id, price_cop")
+    .select("external_id, price_cop")
     .eq("store_id", storeId)
-    .eq("external_id", product.externalId)
-    .maybeSingle();
+    .in("external_id", externalIds);
+  if (selectError) throw selectError;
 
-  const { data: upserted, error } = await supabase
+  const oldPriceByExternalId = new Map(
+    (existingRows ?? []).map((r) => [r.external_id, r.price_cop])
+  );
+
+  const rows = products.map((product) => {
+    const { category, foodGroup } = categorizeProduct(product.name);
+    return {
+      store_id: storeId,
+      external_id: product.externalId,
+      name: product.name,
+      brand: product.brand,
+      presentation: product.presentation,
+      price_cop: product.priceCop,
+      category,
+      food_group: foodGroup,
+      in_stock: true,
+      last_seen_at: new Date().toISOString(),
+    };
+  });
+
+  const { data: upserted, error: upsertError } = await supabase
     .from("products")
-    .upsert(
-      {
-        store_id: storeId,
-        external_id: product.externalId,
-        name: product.name,
-        brand: product.brand,
-        presentation: product.presentation,
-        price_cop: product.priceCop,
-        category,
-        food_group: foodGroup,
-        in_stock: true,
-        last_seen_at: new Date().toISOString(),
-      },
-      { onConflict: "store_id,external_id" }
-    )
-    .select("id")
-    .single();
+    .upsert(rows, { onConflict: "store_id,external_id" })
+    .select("id, external_id, price_cop");
+  if (upsertError) throw upsertError;
 
-  if (error) throw error;
+  const historyRows = (upserted ?? [])
+    .filter((row) => {
+      const oldPrice = oldPriceByExternalId.get(row.external_id);
+      return oldPrice === undefined || oldPrice !== row.price_cop;
+    })
+    .map((row) => ({ product_id: row.id, price_cop: row.price_cop }));
 
-  const priceChanged = !existing || existing.price_cop !== product.priceCop;
-  if (priceChanged && upserted) {
+  if (historyRows.length > 0) {
     const { error: historyError } = await supabase
       .from("product_price_history")
-      .insert({ product_id: upserted.id, price_cop: product.priceCop });
+      .insert(historyRows);
     if (historyError) throw historyError;
   }
 }

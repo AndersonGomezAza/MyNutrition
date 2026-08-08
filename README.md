@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MyNutrition
 
-## Getting Started
+Catálogo de supermercado (Ara, D1), lista de compras, generador de plan de
+comidas y seguimiento de peso. PWA de un solo usuario, Next.js + Supabase,
+desplegada en Vercel.
 
-First, run the development server:
+## Setup local
+
+```bash
+npm install
+cp .env.local.example .env.local   # completa con tu proyecto de Supabase
+npx supabase login
+npx supabase link --project-ref <tu-ref>
+npx supabase db push                # crea las tablas
+```
+
+`supabase db push` **no** corre `supabase/seed.sql` contra un proyecto
+remoto (solo lo hace `supabase db reset`, que es para desarrollo local). En
+un proyecto remoto nuevo, pega el contenido de `supabase/seed.sql` en el
+SQL Editor del dashboard de Supabase una vez, para crear las filas de
+`stores` (Ara, D1).
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run test    # vitest: parser del scraper + categorizador
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Para poblar el catálogo con datos reales, con el server corriendo:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+curl -H "Authorization: Bearer $CRON_SECRET" http://localhost:3000/api/cron/scrape
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+(usa el mismo valor de `CRON_SECRET` que pusiste en `.env.local`). En
+producción esto lo dispara solo el cron de Vercel (`vercel.json`), semanal.
 
-## Learn More
+## Estructura
 
-To learn more about Next.js, take a look at the following resources:
+- `lib/scraper/` — parser + orquestador del scraping de losprecios.co (mismo
+  HTML para cualquier tienda de ese sitio; agregar una tienda nueva es una
+  fila en la tabla `stores`, no código nuevo).
+- `lib/generator/` — generador de plan de compras + menú (presupuesto +
+  exclusiones -> lista + plan de 7 días).
+- `lib/db/` — acceso a Supabase, siempre server-side con el service role key
+  (RLS está activo sin políticas: el navegador nunca habla directo con
+  Supabase).
+- `supabase/migrations/` — esquema completo.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ver el plan de arquitectura completo en el historial de la conversación
+donde se diseñó, o pregúntale a Claude por el contexto del proyecto.
