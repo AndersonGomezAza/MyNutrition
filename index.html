@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catálogo Ara &amp; Plan Semanal Saludable</title>
+<style>
+  :root {
+    --bg: #F3F5EF;
+    --surface: #FFFFFF;
+    --surface-2: #ECEFE6;
+    --ink: #1B2A22;
+    --muted: #5B6B5F;
+    --line: #DBE1D4;
+    --accent: #2F6F4E;
+    --accent-ink: #FFFFFF;
+    --gold: #B96A22;
+    --shadow: 0 1px 2px rgba(27,42,34,0.06), 0 8px 24px -12px rgba(27,42,34,0.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #10160F;
+      --surface: #161E15;
+      --surface-2: #1D2A1B;
+      --ink: #E9EFE4;
+      --muted: #9BAE9A;
+      --line: #29362A;
+      --accent: #74C08F;
+      --accent-ink: #0B140C;
+      --gold: #E3A55C;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F3F5EF; --surface: #FFFFFF; --surface-2: #ECEFE6; --ink: #1B2A22; --muted: #5B6B5F;
+    --line: #DBE1D4; --accent: #2F6F4E; --accent-ink: #FFFFFF; --gold: #B96A22;
+    --shadow: 0 1px 2px rgba(27,42,34,0.06), 0 8px 24px -12px rgba(27,42,34,0.18);
+  }
+  :root[data-theme="dark"] {
+    --bg: #10160F; --surface: #161E15; --surface-2: #1D2A1B; --ink: #E9EFE4; --muted: #9BAE9A;
+    --line: #29362A; --accent: #74C08F; --accent-ink: #0B140C; --gold: #E3A55C;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 {
+    font-family: ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+    font-weight: 600;
+    text-wrap: balance;
+    color: var(--ink);
+    margin: 0;
+  }
+  a { color: var(--accent); }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+  header.hero {
+    padding: clamp(28px, 5vw, 56px) 0 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-size: 0.72rem;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  header.hero h1 {
+    font-size: clamp(1.7rem, 3.6vw, 2.5rem);
+    margin-top: 8px;
+  }
+  header.hero p.lede {
+    color: var(--muted);
+    max-width: 62ch;
+    margin-top: 12px;
+    font-size: 1.02rem;
+  }
+  .source-note {
+    margin-top: 16px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    border-left: 2px solid var(--line);
+    padding-left: 12px;
+  }
+
+  nav.tabs {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.tabs .wrap { display: flex; gap: 4px; overflow-x: auto; }
+  nav.tabs a {
+    display: inline-block;
+    padding: 14px 6px;
+    margin-right: 22px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+  nav.tabs a:hover { color: var(--ink); }
+
+  section { padding: clamp(32px, 5vw, 56px) 0; }
+  section + section { border-top: 1px solid var(--line); }
+  section > .head { margin-bottom: 22px; max-width: 68ch; }
+  section > .head h2 { font-size: clamp(1.35rem, 2.6vw, 1.75rem); }
+  section > .head p { color: var(--muted); margin-top: 8px; }
+
+  /* ---- Catalog ---- */
+  .catalog-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .catalog-controls input[type="search"],
+  .catalog-controls select {
+    font: inherit;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+  }
+  .catalog-controls input[type="search"] { flex: 1 1 220px; }
+  .catalog-controls select { flex: 0 0 auto; }
+  .catalog-controls button {
+    font: inherit;
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.86rem;
+  }
+  .catalog-controls button[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: var(--accent);
+  }
+  .catalog-meta { color: var(--muted); font-size: 0.82rem; margin-bottom: 10px; }
+  .table-shell {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: auto;
+    max-height: 560px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  thead th {
+    position: sticky; top: 0;
+    background: var(--surface-2);
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--line);
+  }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.price, th.price { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: var(--surface-2);
+    color: var(--muted);
+    border: 1px solid var(--line);
+  }
+
+  /* ---- Shopping list / receipt ---- */
+  .receipt {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 8px clamp(16px, 4vw, 32px) 0;
+  }
+  ul.receipt-list { list-style: none; margin: 0; padding: 0; }
+  .receipt-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .receipt-main { display: flex; flex-direction: column; gap: 2px; max-width: 60ch; }
+  .receipt-name { font-weight: 600; }
+  .receipt-note { font-size: 0.82rem; color: var(--muted); }
+  .receipt-nums { display: flex; align-items: baseline; gap: 12px; white-space: nowrap; }
+  .receipt-qty { color: var(--muted); font-size: 0.82rem; }
+  .receipt-price { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .receipt-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 18px 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+  .receipt-total .num { font-variant-numeric: tabular-nums; color: var(--accent); }
+  .budget-bar {
+    height: 8px;
+    border-radius: 99px;
+    background: var(--surface-2);
+    overflow: hidden;
+    margin: 4px 0 18px;
+  }
+  .budget-bar > i { display: block; height: 100%; background: var(--accent); }
+  .budget-caption { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--muted); margin-bottom: 2px; }
+
+  /* ---- Meal plan ---- */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .principle {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .principle .num { color: var(--gold); font-weight: 700; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .principle p { margin: 6px 0 0; font-size: 0.9rem; color: var(--muted); }
+
+  .day-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+  }
+  .day-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px 18px;
+    box-shadow: var(--shadow);
+  }
+  .day-card h3 { font-size: 1.05rem; margin-bottom: 10px; color: var(--accent); }
+  .meal { padding: 8px 0; border-top: 1px solid var(--line); }
+  .meal:first-of-type { border-top: none; }
+  .meal-tag {
+    display: block;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .meal p { margin: 0; font-size: 0.86rem; }
+
+  .tips {
+    margin-top: 30px;
+    background: var(--surface-2);
+    border-radius: 14px;
+    padding: 20px clamp(16px, 4vw, 28px);
+  }
+  .tips h3 { font-size: 1rem; margin-bottom: 10px; }
+  .tips ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 0.9rem; }
+  .tips li { margin-bottom: 6px; }
+  .disclaimer {
+    margin-top: 16px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    border-left: 2px solid var(--gold);
+    padding-left: 12px;
+  }
+
+  .week-list { display: flex; flex-direction: column; gap: 12px; }
+  details.week-block {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  details.week-block > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 16px clamp(16px, 4vw, 26px);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  details.week-block > summary::-webkit-details-marker { display: none; }
+  details.week-block > summary::before {
+    content: "▸";
+    display: inline-block;
+    margin-right: 10px;
+    color: var(--gold);
+    transition: transform 0.15s ease;
+  }
+  details.week-block[open] > summary::before { transform: rotate(90deg); }
+  .week-summary-name { font-weight: 700; }
+  .week-summary-name em { font-style: normal; color: var(--muted); font-weight: 400; }
+  .week-summary-total { font-variant-numeric: tabular-nums; color: var(--accent); font-weight: 700; }
+  .week-body { padding: 0 clamp(16px, 4vw, 26px) 22px; border-top: 1px solid var(--line); }
+  .receipt-compact { border: none; box-shadow: none; padding: 0; margin-top: 16px; }
+
+  footer {
+    padding: 28px 0 48px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 640px) {
+    .receipt-row { flex-direction: column; gap: 4px; }
+    .receipt-nums { justify-content: space-between; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Ara · losprecios.co</span>
+    <h1>Catálogo Ara y plan de compras saludable</h1>
+    <p class="lede">Todo el catálogo de productos de Ara con su precio, una lista de compras de máximo $100.000 COP para una semana con su plan de comidas, y una compra mensual de 4 semanas con variedad y presupuesto propio para bajar grasa corporal comiendo rico y balanceado.</p>
+    <p class="source-note">Precios extraídos de losprecios.co (comparador de precios independiente, no afiliado a Ara) el 8 de agosto de 2026. Los precios pueden variar según la ciudad y cambian con el tiempo — verifícalos en tienda antes de comprar.</p>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap">
+    <a href="#catalogo">Catálogo completo</a>
+    <a href="#compras">Lista de compras</a>
+    <a href="#plan">Plan semanal</a>
+    <a href="#mensual">Compra mensual</a>
+  </div>
+</nav>
+
+<section id="catalogo">
+  <div class="wrap">
+    <div class="head">
+      <h2>Catálogo completo — 677 productos</h2>
+      <p>Busca por nombre, filtra por categoría (asignada automáticamente por palabras clave, puede tener imprecisiones) u ordena por precio.</p>
+    </div>
+    <div class="catalog-controls">
+      <input type="search" id="search" placeholder="Buscar producto, ej. leche, pollo, avena…" aria-label="Buscar producto">
+      <select id="categoryFilter" aria-label="Filtrar por categoría">
+        <option value="Todas">Todas</option>
+<option value="Despensa">Despensa</option>
+<option value="Bebidas">Bebidas</option>
+<option value="Frutas y Verduras">Frutas y Verduras</option>
+<option value="Carnes y Pescados">Carnes y Pescados</option>
+<option value="Panadería">Panadería</option>
+<option value="Refrigerados">Refrigerados</option>
+<option value="Dulces y Pasabocas">Dulces y Pasabocas</option>
+<option value="Cuidado Personal">Cuidado Personal</option>
+<option value="Aseo del Hogar">Aseo del Hogar</option>
+<option value="Licores">Licores</option>
+<option value="Bebés">Bebés</option>
+<option value="Mascotas">Mascotas</option>
+<option value="Varios">Varios</option>
+      </select>
+      <button id="sortAsc" type="button">Precio ↑</button>
+      <button id="sortDesc" type="button">Precio ↓</button>
+    </div>
+    <p class="catalog-meta" id="resultCount"></p>
+    <div class="table-shell">
+      <table>
+        <thead>
+          <tr><th>Producto</th><th>Categoría</th><th class="price">Precio</th></tr>
+        </thead>
+        <tbody id="catalogBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="compras">
+  <div class="wrap">
+    <div class="head">
+      <h2>Lista de compras de la semana</h2>
+      <p>Pensada para 1 persona, 7 días, con proteína en cada comida, fibra, verduras variadas y sin azúcares ni fritos añadidos. Todo sale de este mismo catálogo de Ara.</p>
+    </div>
+    <div class="budget-caption">
+      <span>Presupuesto máximo: $ 100.000</span>
+      <span>Usado: 95%</span>
+    </div>
+    <div class="budget-bar"><i style="width:95%"></i></div>
+    <div class="receipt">
+      <ul class="receipt-list">
+        
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Huevos AA Rojos Del Canasto 12 unidades</span>
+          <span class="receipt-note">Desayunos y proteína de la semana</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.350</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Pechuga de Pollo Ricachón 2 kg</span>
+          <span class="receipt-note">Proteína principal (5 porciones ~400 g)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 8.950</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Atún en Lomitos en Agua Costa Blanca 170 g</span>
+          <span class="receipt-note">Proteína rápida para 2 almuerzos/cenas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty">x2</span>
+          <span class="receipt-price">$ 6.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Filete de Tilapia El Gran Langostino 500 g</span>
+          <span class="receipt-note">Pescado para 2 porciones</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 11.100</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Leche Larga Vida Semidescremada Deslactosada en Bolsa De la Cuesta 1 100 ml</span>
+          <span class="receipt-note">Para la avena y el café</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.950</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Yogur Griego con Sabor Natural Alpina 150 g</span>
+          <span class="receipt-note">Snacks altos en proteína</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty">x3</span>
+          <span class="receipt-price">$ 7.650</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Queso Campesino Entero Colanta 250 g</span>
+          <span class="receipt-note">Para acompañar y snacks</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 4.200</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Avena en Hojuelas Don Pancho 250 g</span>
+          <span class="receipt-note">Desayunos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.250</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Arroz Blanco Del Costal 1 000 g</span>
+          <span class="receipt-note">Acompañante de almuerzos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Lentejas Del Costal 500 g</span>
+          <span class="receipt-note">Legumbres (2 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.900</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Fríjoles Cargamanto Rosados Del Costal 500 g</span>
+          <span class="receipt-note">Legumbres (2 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.850</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Garbanzos Del Costal 500 g</span>
+          <span class="receipt-note">Legumbres (2 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.450</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Pan Integral Tajado Bimbo 460 g</span>
+          <span class="receipt-note">Desayunos con huevo</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 4.550</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Manzana Gala de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta para snacks</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 5.200</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Naranja Valencia de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta para snacks / vitamina C</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Plátano de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / energía</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.800</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Papaya de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / fibra</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.000</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Mora Congelada Pulpi Fresh 500 g</span>
+          <span class="receipt-note">Batidos de desayuno</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.750</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Tomate de Ara 500 g</span>
+          <span class="receipt-note">Ensaladas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Cebolla Blanca de Ara 500 g</span>
+          <span class="receipt-note">Base de preparaciones</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.800</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Espinaca de Ara 200 g</span>
+          <span class="receipt-note">Salteados y tortillas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.000</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Lechuga Crespa Verde de Ara 150 g</span>
+          <span class="receipt-note">Ensaladas primeros días</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.700</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Pimentón de Ara 500 g</span>
+          <span class="receipt-note">Salteados y ensaladas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Apio de Ara 700 g</span>
+          <span class="receipt-note">Salteados</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Arvejas y Zanahorias en Lata Sembralta 320 g</span>
+          <span class="receipt-note">Guarnición de verduras</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.850</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Aceite de Soya Olisun 900 ml</span>
+          <span class="receipt-note">Para cocinar toda la semana</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 4.350</span>
+        </div>
+      </li>
+      </ul>
+      <div class="receipt-total">
+        <span>Total</span>
+        <span class="num">$ 94.650</span>
+      </div>
+    </div>
+    <p class="source-note" style="margin-top:14px;">Quedan $ 5.350 libres del presupuesto de $ 100.000. Las cantidades son una guía: verduras de hoja como lechuga o espinaca rinden menos de lo calculado si usas porciones más grandes — puedes reponerlas a mitad de semana con lo que sobró del presupuesto.</p>
+  </div>
+</section>
+
+<section id="plan">
+  <div class="wrap">
+    <div class="head">
+      <h2>Plan de alimentación para bajar de peso</h2>
+      <p>7 días de desayuno, almuerzo, merienda y cena usando solo lo que está en la lista de compras. Pensado para un déficit calórico leve y sostenible, no para pasar hambre.</p>
+    </div>
+    <div class="principles">
+      <div class="principle"><span class="num">Proteína</span><p>En cada comida principal: huevo, pollo, atún, tilapia o legumbres.</p></div>
+      <div class="principle"><span class="num">Fibra</span><p>Verduras en almuerzo y cena, fruta entera como snack en vez de dulces.</p></div>
+      <div class="principle"><span class="num">Carbohidrato</span><p>Porciones moderadas de arroz, avena y pan integral — no se eliminan, se controlan.</p></div>
+      <div class="principle"><span class="num">Grasa</span><p>Poco aceite para cocinar, sin fritos ni ultraprocesados en la lista.</p></div>
+    </div>
+    <div class="day-grid">
+      
+      <article class="day-card">
+        <h3>Lunes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Avena en hojuelas cocida con leche semidescremada y plátano en rodajas</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo a la plancha, arroz blanco y ensalada de tomate, cebolla y lechuga</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Manzana + yogur griego natural</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Tortilla de huevo con espinaca salteada y 2 tajadas de pan integral</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Martes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos revueltos, pan integral y naranja</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Lentejas guisadas con cebolla y tomate, arroz y ensalada de lechuga</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Papaya</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Atún en agua con ensalada de lechuga, tomate y pimentón</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Miércoles</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Batido de avena con leche y mora congelada</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo, fríjoles guisados y ensalada de tomate y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Queso campesino + manzana</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Huevos revueltos con espinaca y pan integral</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Jueves</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Yogur griego con avena y plátano en rodajas</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Garbanzos guisados con cebolla, tomate y pimentón, y arroz</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Naranja</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Tilapia a la plancha, ensalada de tomate, cebolla y pimentón, y arvejas con zanahoria</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Viernes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos con tomate salteado y pan integral</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo, arroz y apio con pimentón salteados</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Papaya</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Fríjoles guisados con ensalada de tomate y cebolla</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Sábado</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Avena con leche y mora congelada</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Atún en agua con ensalada grande de lechuga, tomate y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Yogur griego + naranja</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Pechuga de pollo, garbanzos y espinaca salteada</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Domingo</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos con queso campesino y pan integral</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Tilapia a la plancha, arroz y ensalada de tomate y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Plátano + manzana</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Lentejas guisadas con apio y pimentón salteados</p></div>
+      </article>
+    </div>
+    <div class="tips">
+      <h3>Para que funcione</h3>
+      <ul>
+        <li>Toma entre 2 y 2,5 litros de agua al día; el agua no está en la lista porque se asume del grifo o filtrada en casa.</li>
+        <li>Cocina el pollo, pescado y huevo a la plancha o al horno, no frito.</li>
+        <li>Si tienes hambre entre comidas, repite fruta o un vaso de leche antes que picar dulce.</li>
+        <li>Camina o muévete al menos 30 minutos casi todos los días — el déficit calórico funciona mejor acompañado de actividad física.</li>
+      </ul>
+      <p class="disclaimer">Esta es una guía general de alimentación balanceada, no una prescripción médica ni nutricional individualizada. Si tienes una condición de salud (diabetes, hipertensión, embarazo, etc.) o quieres un plan ajustado a tu peso y actividad física, consulta con un nutricionista o médico antes de empezar.</p>
+    </div>
+  </div>
+</section>
+
+<section id="mensual">
+  <div class="wrap">
+    <div class="head">
+      <h2>Compra mensual — 4 semanas con variedad</h2>
+      <p>Presupuesto que armé yo mismo, semana a semana, con productos reales del catálogo: más proteína que en un plan de mantenimiento (para cuidar el músculo mientras baja la grasa), sin fritos, sin azúcares añadidos y sin pepino, brócoli ni calabaza. Cada semana rota la proteína y el carbohidrato para que el mes no se sienta repetitivo.</p>
+    </div>
+    <div class="budget-caption">
+      <span>Total del mes (4 semanas)</span>
+      <span>$ 347.800</span>
+    </div>
+    <div class="budget-bar"><i style="width:100%"></i></div>
+    <p class="source-note" style="margin-bottom:22px;">Promedio de $ 86.950 por semana. Sube y baja un poco entre semanas porque cada una tiene su propia mezcla de proteínas (pollo y huevo la semana 1, pescado la semana 2, carnes rojas magras la semana 3, variedad y pescado otra vez para cerrar el mes).</p>
+    <div class="week-list">
+      
+    <details class="week-block" open>
+      <summary>
+        <span class="week-summary-name">Semana 1 · <em>Pollo, huevo y legumbres</em></span>
+        <span class="week-summary-total">$ 83.550</span>
+      </summary>
+      <div class="week-body">
+        <div class="receipt receipt-compact">
+          <ul class="receipt-list">
+            
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Huevos AA Rojos Del Canasto 12 unidades</span>
+          <span class="receipt-note">Desayunos y proteína base</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.350</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Pechuga de Pollo Ricachón 2 kg</span>
+          <span class="receipt-note">Proteína principal (5 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 8.950</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Atún en Lomitos en Agua Costa Blanca 170 g</span>
+          <span class="receipt-note">2 almuerzos/cenas rápidos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty">x2</span>
+          <span class="receipt-price">$ 6.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Leche Larga Vida Semidescremada Deslactosada en Bolsa De la Cuesta 1 100 ml</span>
+          <span class="receipt-note">Avena y café</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.950</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Yogur Griego con Sabor Natural Alpina 150 g</span>
+          <span class="receipt-note">Snacks altos en proteína</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty">x3</span>
+          <span class="receipt-price">$ 7.650</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Queso Campesino Entero Colanta 250 g</span>
+          <span class="receipt-note">Acompañante y snacks</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 4.200</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Avena en Hojuelas Don Pancho 250 g</span>
+          <span class="receipt-note">Desayunos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.250</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Arroz Blanco Del Costal 1 000 g</span>
+          <span class="receipt-note">Acompañante de almuerzos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Pan Integral Tajado Bimbo 460 g</span>
+          <span class="receipt-note">Desayunos con huevo</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 4.550</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Lentejas Del Costal 500 g</span>
+          <span class="receipt-note">Legumbres (2 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.900</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Fríjoles Cargamanto Rosados Del Costal 500 g</span>
+          <span class="receipt-note">Legumbres (2 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.850</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Garbanzos Del Costal 500 g</span>
+          <span class="receipt-note">Legumbres (2 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.450</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Manzana Gala de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta para snacks</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 5.200</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Naranja Valencia de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / vitamina C</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Plátano de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / energía</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.800</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Papaya de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / fibra</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.000</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Mora Congelada Pulpi Fresh 500 g</span>
+          <span class="receipt-note">Batidos de desayuno</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.750</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Tomate de Ara 500 g</span>
+          <span class="receipt-note">Ensaladas y guisos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Cebolla Blanca de Ara 500 g</span>
+          <span class="receipt-note">Base de preparaciones</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.800</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Espinaca de Ara 200 g</span>
+          <span class="receipt-note">Salteados y tortillas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.000</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Lechuga Crespa Verde de Ara 150 g</span>
+          <span class="receipt-note">Ensaladas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.700</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Pimentón de Ara 500 g</span>
+          <span class="receipt-note">Salteados y ensaladas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Apio de Ara 700 g</span>
+          <span class="receipt-note">Salteados</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Arvejas y Zanahorias en Lata Sembralta 320 g</span>
+          <span class="receipt-note">Guarnición de verduras</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.850</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Aceite de Soya Olisun 900 ml</span>
+          <span class="receipt-note">Para cocinar toda la semana</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 4.350</span>
+        </div>
+      </li>
+          </ul>
+          <div class="receipt-total">
+            <span>Subtotal Semana 1</span>
+            <span class="num">$ 83.550</span>
+          </div>
+        </div>
+        <div class="day-grid" style="margin-top:18px;">
+          
+      <article class="day-card">
+        <h3>Lunes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Avena cocida con leche y plátano en rodajas</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo a la plancha, arroz y ensalada de tomate, cebolla y lechuga</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Manzana + yogur griego</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Tortilla de huevo con espinaca y 2 tajadas de pan integral</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Martes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos revueltos, pan integral y naranja</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Lentejas guisadas con cebolla y tomate, arroz y ensalada de lechuga</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Papaya</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Atún en agua con ensalada de lechuga, tomate y pimentón</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Miércoles</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Batido de avena con leche y mora congelada</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo, fríjoles guisados y ensalada de tomate y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Queso campesino + manzana</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Huevos revueltos con espinaca y pan integral</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Jueves</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Yogur griego con avena y plátano en rodajas</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Garbanzos guisados con cebolla, tomate y pimentón, y arroz</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Naranja</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Pechuga de pollo, ensalada de tomate, cebolla y pimentón, y arvejas con zanahoria</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Viernes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos con tomate salteado y pan integral</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo, arroz y apio con pimentón salteados</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Papaya</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Fríjoles guisados con ensalada de tomate y cebolla</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Sábado</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Avena con leche y mora congelada</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Atún en agua con ensalada grande de lechuga, tomate y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Yogur griego + naranja</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Pechuga de pollo, garbanzos y espinaca salteada</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Domingo</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos con queso campesino y pan integral</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo, arroz y ensalada de tomate y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Plátano + manzana</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Lentejas guisadas con apio y pimentón salteados</p></div>
+      </article>
+        </div>
+      </div>
+    </details>
+
+    <details class="week-block">
+      <summary>
+        <span class="week-summary-name">Semana 2 · <em>Pescado y mar</em></span>
+        <span class="week-summary-total">$ 85.850</span>
+      </summary>
+      <div class="week-body">
+        <div class="receipt receipt-compact">
+          <ul class="receipt-list">
+            
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Huevos AA Rojos Del Canasto 12 unidades</span>
+          <span class="receipt-note">Desayunos y proteína base</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.350</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Filete de Tilapia El Gran Langostino 500 g</span>
+          <span class="receipt-note">2 porciones de pescado</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 11.100</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Atún en Lomitos en Agua Costa Blanca 170 g</span>
+          <span class="receipt-note">2 almuerzos rápidos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty">x2</span>
+          <span class="receipt-price">$ 6.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Sardinas en Tomate Bocado de Mar 425 g</span>
+          <span class="receipt-note">Cena rápida y económica</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.950</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Leche Larga Vida Semidescremada Deslactosada en Bolsa De la Cuesta 1 100 ml</span>
+          <span class="receipt-note">Avena y café</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.950</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Yogur Griego con Sabor Natural Alpina 150 g</span>
+          <span class="receipt-note">Snacks altos en proteína</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty">x3</span>
+          <span class="receipt-price">$ 7.650</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Queso Crema Colanta 230 g</span>
+          <span class="receipt-note">Untado de desayuno</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.250</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Avena en Hojuelas Don Pancho 250 g</span>
+          <span class="receipt-note">Desayunos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.250</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Arroz Blanco Del Costal 1 000 g</span>
+          <span class="receipt-note">Acompañante de almuerzos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Espaguetis Doria 500 g</span>
+          <span class="receipt-note">Variedad de carbohidrato</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.450</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Fríjoles Cargamanto Rosados Del Costal 500 g</span>
+          <span class="receipt-note">Legumbres (2 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.850</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Garbanzos Del Costal 500 g</span>
+          <span class="receipt-note">Legumbres (2 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.450</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Manzana Gala de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta para snacks</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 5.200</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Guayaba de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / fibra</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.800</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Mandarina de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / vitamina C</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Papaya de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / fibra</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.000</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Mora Congelada Pulpi Fresh 500 g</span>
+          <span class="receipt-note">Batidos de desayuno</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.750</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Tomate de Ara 500 g</span>
+          <span class="receipt-note">Ensaladas y guisos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Cebolla Blanca de Ara 500 g</span>
+          <span class="receipt-note">Base de preparaciones</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.800</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Espinaca de Ara 200 g</span>
+          <span class="receipt-note">Salteados</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.000</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Lechuga Crespa Verde de Ara 150 g</span>
+          <span class="receipt-note">Ensaladas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.700</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Pimentón de Ara 500 g</span>
+          <span class="receipt-note">Salteados y ensaladas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Tomate de Árbol de Ara 500 g</span>
+          <span class="receipt-note">Jugo natural sin azúcar</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Aceite de Soya Olisun 900 ml</span>
+          <span class="receipt-note">Para cocinar toda la semana</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 4.350</span>
+        </div>
+      </li>
+          </ul>
+          <div class="receipt-total">
+            <span>Subtotal Semana 2</span>
+            <span class="num">$ 85.850</span>
+          </div>
+        </div>
+        <div class="day-grid" style="margin-top:18px;">
+          
+      <article class="day-card">
+        <h3>Lunes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Avena con leche y mandarina</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Tilapia a la plancha, arroz y ensalada de tomate y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Manzana + yogur griego</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Huevos revueltos con espinaca</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Martes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos con queso crema y jugo de tomate de árbol sin azúcar</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Espaguetis con atún, tomate y cebolla salteados</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Guayaba</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Sardinas en tomate con ensalada de lechuga y pimentón</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Miércoles</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Batido de avena con leche y mora congelada</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Tilapia a la plancha, garbanzos guisados y ensalada de tomate</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Queso crema + manzana</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Fríjoles guisados con cebolla y pimentón</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Jueves</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Yogur griego con avena y guayaba picada</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Atún con arroz y ensalada de espinaca y tomate</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Mandarina</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Huevos con pimentón salteado</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Viernes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos con tomate salteado</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Fríjoles guisados, arroz y ensalada de lechuga y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Papaya</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Sardinas en tomate con ensalada de tomate y cebolla</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Sábado</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Avena con leche y mora congelada</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Garbanzos guisados con espaguetis y salsa de tomate casera</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Yogur griego + guayaba</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Tilapia a la plancha con ensalada grande de lechuga y tomate</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Domingo</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos con queso crema y mandarina</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Atún con arroz y pimentón salteado</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Manzana</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Espinaca salteada con huevo y espaguetis</p></div>
+      </article>
+        </div>
+      </div>
+    </details>
+
+    <details class="week-block">
+      <summary>
+        <span class="week-summary-name">Semana 3 · <em>Carnes magras y guisos</em></span>
+        <span class="week-summary-total">$ 84.850</span>
+      </summary>
+      <div class="week-body">
+        <div class="receipt receipt-compact">
+          <ul class="receipt-list">
+            
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Huevos AA Rojos Del Canasto 12 unidades</span>
+          <span class="receipt-note">Desayunos y proteína base</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.350</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Carne de Res para Sudar de Ara 0.5 kg</span>
+          <span class="receipt-note">2 porciones de guiso de res</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 7.500</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Carne de Cerdo de Ara 0.5 kg</span>
+          <span class="receipt-note">2 porciones magras de cerdo</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 6.900</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Pechuga de Pollo Ricachón 2 kg</span>
+          <span class="receipt-note">Base de proteína del resto de la semana</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 8.950</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Leche Larga Vida Semidescremada Deslactosada en Bolsa De la Cuesta 1 100 ml</span>
+          <span class="receipt-note">Avena y café</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.950</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Yogur Griego con Sabor Natural Alpina 150 g</span>
+          <span class="receipt-note">Snacks altos en proteína</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty">x3</span>
+          <span class="receipt-price">$ 7.650</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Queso Campesino Entero Colanta 250 g</span>
+          <span class="receipt-note">Acompañante y snacks</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 4.200</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Avena en Hojuelas Don Pancho 250 g</span>
+          <span class="receipt-note">Desayunos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.250</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Arroz Blanco Del Costal 1 000 g</span>
+          <span class="receipt-note">Acompañante de almuerzos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Papa de Ara 2 kg</span>
+          <span class="receipt-note">Variedad de carbohidrato en los guisos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.900</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Lentejas Del Costal 500 g</span>
+          <span class="receipt-note">Legumbres (2 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.900</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Garbanzos Del Costal 500 g</span>
+          <span class="receipt-note">Legumbres (2 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.450</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Manzana Gala de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta para snacks</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 5.200</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Naranja Valencia de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / vitamina C</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Plátano de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / energía</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.800</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Mora Congelada Pulpi Fresh 500 g</span>
+          <span class="receipt-note">Batidos de desayuno</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.750</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Tomate de Ara 500 g</span>
+          <span class="receipt-note">Ensaladas y guisos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Cebolla Blanca de Ara 500 g</span>
+          <span class="receipt-note">Base de guisos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.800</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Espinaca de Ara 200 g</span>
+          <span class="receipt-note">Salteados</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.000</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Lechuga Crespa Verde de Ara 150 g</span>
+          <span class="receipt-note">Ensaladas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.700</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Pimentón de Ara 500 g</span>
+          <span class="receipt-note">Guisos y ensaladas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Apio de Ara 700 g</span>
+          <span class="receipt-note">Guisos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Arvejas y Zanahorias en Lata Sembralta 320 g</span>
+          <span class="receipt-note">Guarnición de verduras</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.850</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Aceite de Soya Olisun 900 ml</span>
+          <span class="receipt-note">Para cocinar toda la semana</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 4.350</span>
+        </div>
+      </li>
+          </ul>
+          <div class="receipt-total">
+            <span>Subtotal Semana 3</span>
+            <span class="num">$ 84.850</span>
+          </div>
+        </div>
+        <div class="day-grid" style="margin-top:18px;">
+          
+      <article class="day-card">
+        <h3>Lunes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Avena con leche y plátano en rodajas</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Carne de res sudada con papa, cebolla y tomate</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Manzana + yogur griego</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Huevos con espinaca salteada</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Martes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos revueltos y naranja</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo, arroz y ensalada de tomate y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Yogur griego</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Lentejas guisadas con apio y pimentón</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Miércoles</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Batido de avena con leche y mora congelada</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Carne de cerdo a la plancha con papa y ensalada de lechuga</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Queso campesino + manzana</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Garbanzos guisados con tomate y cebolla</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Jueves</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Yogur griego con avena y plátano en rodajas</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo, papa y arvejas con zanahoria</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Naranja</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Huevos con pimentón salteado</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Viernes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos con tomate salteado</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Carne de res sudada con arroz y ensalada de cebolla y pimentón</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Manzana</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Lentejas guisadas con espinaca salteada</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Sábado</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Avena con leche y mora congelada</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Carne de cerdo con arroz y ensalada de tomate y lechuga</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Yogur griego + naranja</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Pechuga de pollo con papa y ensalada de tomate</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Domingo</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos con queso campesino</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo, garbanzos y ensalada de lechuga y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Plátano</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Papa con apio y pimentón salteados y huevo</p></div>
+      </article>
+        </div>
+      </div>
+    </details>
+
+    <details class="week-block">
+      <summary>
+        <span class="week-summary-name">Semana 4 · <em>Variedad y cierre de mes</em></span>
+        <span class="week-summary-total">$ 93.550</span>
+      </summary>
+      <div class="week-body">
+        <div class="receipt receipt-compact">
+          <ul class="receipt-list">
+            
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Huevos AA Rojos Del Canasto 12 unidades</span>
+          <span class="receipt-note">Desayunos y proteína base</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.350</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Pechuga de Pollo Ricachón 2 kg</span>
+          <span class="receipt-note">Proteína principal</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 8.950</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Filete de Tilapia El Gran Langostino 500 g</span>
+          <span class="receipt-note">2 porciones de pescado</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 11.100</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Atún en Lomitos en Agua Costa Blanca 170 g</span>
+          <span class="receipt-note">2 almuerzos rápidos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty">x2</span>
+          <span class="receipt-price">$ 6.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Leche Larga Vida Semidescremada Deslactosada en Bolsa De la Cuesta 1 100 ml</span>
+          <span class="receipt-note">Avena y café</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.950</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Yogur Griego con Sabor Natural Alpina 150 g</span>
+          <span class="receipt-note">Snacks altos en proteína</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty">x3</span>
+          <span class="receipt-price">$ 7.650</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Queso Crema Colanta 230 g</span>
+          <span class="receipt-note">Untado de desayuno</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.250</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Avena en Hojuelas Don Pancho 250 g</span>
+          <span class="receipt-note">Desayunos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.250</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Arroz Blanco Del Costal 1 000 g</span>
+          <span class="receipt-note">Acompañante de almuerzos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Pan Integral Tajado Bimbo 460 g</span>
+          <span class="receipt-note">Desayunos con huevo</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 4.550</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Fríjoles Cargamanto Rosados Del Costal 500 g</span>
+          <span class="receipt-note">Legumbres (2 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.850</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Garbanzos Del Costal 500 g</span>
+          <span class="receipt-note">Legumbres (2 porciones)</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.450</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Manzana Gala de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta para snacks</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 5.200</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Naranja Valencia de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / vitamina C</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Papaya de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / fibra</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.000</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Guayaba de Ara 0.5 kg</span>
+          <span class="receipt-note">Fruta / fibra</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.800</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Mora Congelada Pulpi Fresh 500 g</span>
+          <span class="receipt-note">Batidos de desayuno</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.750</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Tomate de Ara 500 g</span>
+          <span class="receipt-note">Ensaladas y guisos</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.400</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Cebolla Blanca de Ara 500 g</span>
+          <span class="receipt-note">Base de preparaciones</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.800</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Espinaca de Ara 200 g</span>
+          <span class="receipt-note">Salteados</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.000</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Lechuga Crespa Verde de Ara 150 g</span>
+          <span class="receipt-note">Ensaladas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.700</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Pimentón de Ara 500 g</span>
+          <span class="receipt-note">Salteados y ensaladas</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 2.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Apio de Ara 700 g</span>
+          <span class="receipt-note">Salteados</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 1.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Tomate de Árbol de Ara 500 g</span>
+          <span class="receipt-note">Jugo natural sin azúcar</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 3.600</span>
+        </div>
+      </li>
+
+      <li class="receipt-row">
+        <div class="receipt-main">
+          <span class="receipt-name">Aceite de Soya Olisun 900 ml</span>
+          <span class="receipt-note">Para cocinar toda la semana</span>
+        </div>
+        <div class="receipt-nums">
+          <span class="receipt-qty"></span>
+          <span class="receipt-price">$ 4.350</span>
+        </div>
+      </li>
+          </ul>
+          <div class="receipt-total">
+            <span>Subtotal Semana 4</span>
+            <span class="num">$ 93.550</span>
+          </div>
+        </div>
+        <div class="day-grid" style="margin-top:18px;">
+          
+      <article class="day-card">
+        <h3>Lunes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Avena con leche y papaya</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo, arroz y ensalada de tomate y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Manzana + yogur griego</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Tilapia a la plancha con ensalada de lechuga y pimentón</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Martes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos con pan integral y naranja</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Fríjoles guisados con arroz y ensalada de tomate</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Guayaba</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Atún con ensalada de espinaca y cebolla</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Miércoles</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Batido de avena con leche y mora congelada</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo, garbanzos y ensalada de pimentón</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Queso crema + manzana</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Huevos con espinaca y pan integral</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Jueves</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Yogur griego con avena y papaya</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Tilapia a la plancha, arroz y ensalada de tomate y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Naranja</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Fríjoles guisados con apio salteado</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Viernes</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos con tomate salteado y pan integral</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Pechuga de pollo, arroz y ensalada de lechuga</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Guayaba</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Atún con ensalada de pimentón y cebolla</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Sábado</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Avena con leche y mora congelada</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Garbanzos guisados con arroz y ensalada de tomate</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Yogur griego + naranja</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Pechuga de pollo con espinaca salteada</p></div>
+      </article>
+
+      <article class="day-card">
+        <h3>Domingo</h3>
+        <div class="meal"><span class="meal-tag">Desayuno</span><p>Huevos con queso crema y jugo de tomate de árbol sin azúcar</p></div>
+<div class="meal"><span class="meal-tag">Almuerzo</span><p>Tilapia a la plancha, arroz y ensalada de tomate y cebolla</p></div>
+<div class="meal"><span class="meal-tag">Merienda</span><p>Manzana + papaya</p></div>
+<div class="meal"><span class="meal-tag">Cena</span><p>Fríjoles guisados con pimentón y apio salteados</p></div>
+      </article>
+        </div>
+      </div>
+    </details>
+    </div>
+    <div class="tips" style="margin-top:24px;">
+      <h3>Sobre bajar grasa "rápido"</h3>
+      <ul>
+        <li>La forma más rápida de bajar grasa que de verdad se sostiene es un déficit calórico moderado (no extremo) + proteína alta en cada comida + moverte casi todos los días — por eso este plan sube la proteína frente al de una sola semana.</li>
+        <li>Un ritmo realista y seguro es entre 0,5 y 1 kg por semana. Bajar mucho más rápido casi siempre es agua y músculo, no grasa, y se recupera apenas vuelves a comer normal.</li>
+        <li>Añade actividad física: caminar rápido, fuerza con el propio peso corporal o cardio 4-5 veces por semana acelera la pérdida de grasa sin tener que bajar más la comida.</li>
+        <li>Repite las verduras y frutas de una semana a otra si algo no te gustó o no lo conseguiste — lo importante es mantener la proteína y evitar fritos/azúcar, no seguir la receta al pie de la letra.</li>
+      </ul>
+      <p class="disclaimer">Este plan busca un déficit calórico razonable, no una dieta extrema. Si tienes una condición médica, tomas medicamentos o quieres perder peso muy rápido por una razón puntual, consúltalo primero con un nutricionista o médico.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Datos del catálogo tomados de <a href="https://losprecios.co/ara_t2" target="_blank" rel="noopener">losprecios.co/ara_t2</a> el 8 de agosto de 2026 (68 páginas, 677 productos). losprecios.co es un comparador de precios independiente y no tiene relación comercial con Ara.
+  </div>
+</footer>
+
+<script>
+  const CATALOG = [{"n":"Aceite de Girasol Olisun 3 000 ml","p":17000,"c":"Despensa"},{"n":"Crema de Leche Alquería 200 g","p":2100,"c":"Refrigerados"},{"n":"Crema de Leche D'lish 200 g","p":2050,"c":"Refrigerados"},{"n":"Leche Larga Vida Entera en Bolsa Alquería 1 100 ml","p":2800,"c":"Refrigerados"},{"n":"Leche Larga Vida Semidescremada Deslactosada en Bolsa De la Cuesta 5 400 ml","p":9600,"c":"Refrigerados"},{"n":"Leche Larga Vida Semidescremada Deslactosada en Bolsa De la Cuesta 1 100 ml","p":1950,"c":"Refrigerados"},{"n":"Leche Larga Vida Entera en Bolsa Alquería 6 600 ml","p":16800,"c":"Refrigerados"},{"n":"Leche Larga Vida Entera en Bolsa De la Cuesta 1 100 ml","p":1850,"c":"Refrigerados"},{"n":"Leche Larga Vida Entera en Bolsa De la Cuesta 5 400 ml","p":9000,"c":"Refrigerados"},{"n":"Tortillas Camote 300 g","p":3250,"c":"Despensa"},{"n":"Aceite de Girasol Olisol 900 ml","p":5200,"c":"Despensa"},{"n":"Aceite de Canola Olisun 900 ml","p":5750,"c":"Despensa"},{"n":"Aceite de Soya Olisun 900 ml","p":4350,"c":"Despensa"},{"n":"Aceite de Soya Sonelo 3 000 ml","p":12950,"c":"Despensa"},{"n":"Azúcar Blanca Incauca 2 500 g","p":7000,"c":"Despensa"},{"n":"Azúcar Blanca Riopaila 1 000 g","p":2750,"c":"Despensa"},{"n":"Azúcar Blanca Riopaila 2 500 g","p":7150,"c":"Despensa"},{"n":"Azúcar Morena Riopaila 1 000 g","p":2900,"c":"Despensa"},{"n":"Aceite Vegetal Sonelo 3 000 ml","p":12400,"c":"Despensa"},{"n":"Azúcar Blanca Incauca 5 000 g","p":14000,"c":"Despensa"},{"n":"Arroz Blanco de Muy Alta Calidad Castellano 1 000 g","p":5450,"c":"Despensa"},{"n":"Arroz Blanco Del Costal 500 g","p":1200,"c":"Despensa"},{"n":"Arroz Blanco Del Costal 12 500 g","p":30000,"c":"Despensa"},{"n":"Arroz Blanco Del Costal 1 000 g","p":3400,"c":"Despensa"},{"n":"Arroz Blanco Del Costal 3 000 g","p":7200,"c":"Despensa"},{"n":"Arroz Blanco Diana 1 000 g","p":3900,"c":"Despensa"},{"n":"Arroz Blanco Diana 1 000 g","p":4250,"c":"Despensa"},{"n":"Papas a la Francesa Congeladas Mr. Congelo 500 g","p":3150,"c":"Despensa"},{"n":"Papas a la Francesa Congeladas McCain 1 000 g","p":9900,"c":"Despensa"},{"n":"Tocinetas Kai 150 g","p":3350,"c":"Carnes y Pescados"},{"n":"Arroz Blanco Diana 3 000 g","p":8100,"c":"Despensa"},{"n":"Arroz Blanco Diana 500 g","p":1350,"c":"Despensa"},{"n":"Huevos A Rojos Huevos Oro 30 unidades","p":7800,"c":"Refrigerados"},{"n":"Huevos A Rojos Del Canasto 30 unidades","p":7800,"c":"Refrigerados"},{"n":"Huevos AA Rojos Del Canasto 12 unidades","p":3350,"c":"Refrigerados"},{"n":"Mantequilla con Sal Colanta 250 g","p":4650,"c":"Refrigerados"},{"n":"Margarina de Mesa y Cocina Rama 250 g","p":4800,"c":"Refrigerados"},{"n":"Margarina de Mesa y Cocina Sonne 250 g","p":1950,"c":"Refrigerados"},{"n":"Margarina de Mesa y Cocina Sonne 125 g","p":1000,"c":"Refrigerados"},{"n":"Arroz Blanco Diana 12 500 g","p":43890,"c":"Despensa"},{"n":"Detergente en Polvo As 1 000 g","p":5400,"c":"Aseo del Hogar"},{"n":"Detergente en Polvo con Aroma a Limón As 500 g","p":2850,"c":"Aseo del Hogar"},{"n":"Detergente en Polvo con Aroma Floral Edén 1 000 g","p":4250,"c":"Aseo del Hogar"},{"n":"Detergente en Polvo con Aroma Floral Edén 2 700 g","p":11300,"c":"Aseo del Hogar"},{"n":"Detergente en Polvo con Aroma Floral Edén 4 500 g","p":16500,"c":"Aseo del Hogar"},{"n":"Detergente en Polvo con Aroma Floral Edén 500 g","p":2200,"c":"Aseo del Hogar"},{"n":"Detergente en Polvo con Aroma a Limón Edén 1 000 g","p":4250,"c":"Aseo del Hogar"},{"n":"Detergente en Polvo con Aroma a Limón Edén 2 700 g","p":11300,"c":"Aseo del Hogar"},{"n":"Detergente en Polvo con Aroma a Limón Edén 4 500 g","p":16500,"c":"Aseo del Hogar"},{"n":"Detergente en Polvo con Aroma a Limón Edén 500 g","p":2200,"c":"Aseo del Hogar"},{"n":"Detergente en Polvo Fab 4 000 g","p":24000,"c":"Aseo del Hogar"},{"n":"Detergente en Polvo Fab 2 000 g","p":15000,"c":"Aseo del Hogar"},{"n":"Pan Blanco para Hamburguesa Bimbo 350 g","p":3500,"c":"Panadería"},{"n":"Pan Blanco para Perro Bimbo 405 g","p":3700,"c":"Mascotas"},{"n":"Pan Blanco Tajado Bimbo 600 g","p":4200,"c":"Panadería"},{"n":"Pan Blanco Tajado Comapan 480 g","p":3400,"c":"Panadería"},{"n":"Pan Blanco Tajado de Ara 450 g","p":1750,"c":"Panadería"},{"n":"Papel Higiénico Triple Hoja Suave Arbora 152 m","p":4850,"c":"Aseo del Hogar"},{"n":"Queso Crema Colanta 230 g","p":3250,"c":"Refrigerados"},{"n":"Pan Blanco Tajado de Ara 550 g","p":2150,"c":"Panadería"},{"n":"Atún en Lomitos en Aceite Costa Blanca 170 g","p":3300,"c":"Carnes y Pescados"},{"n":"Atún en Lomitos en Agua Costa Blanca 170 g","p":3300,"c":"Bebidas"},{"n":"Atún en Lomitos en Aceite Van Camp's 160 g","p":4200,"c":"Carnes y Pescados"},{"n":"Papel Higiénico Triple Hoja Suave Arbora 288 m","p":7500,"c":"Aseo del Hogar"},{"n":"Papel Higiénico Triple Hoja Suave Arbora 522 m","p":14500,"c":"Aseo del Hogar"},{"n":"Papel Higiénico Doble Hoja Familia 312 m","p":10500,"c":"Aseo del Hogar"},{"n":"Papel Higiénico Triple Hoja Rosal 540 m","p":20200,"c":"Aseo del Hogar"},{"n":"Papel Higiénico Triple Hoja Suave Rosal 36 m","p":1800,"c":"Aseo del Hogar"},{"n":"Papel Higiénico Triple Hoja Suave Suave Gold 444 m","p":22300,"c":"Aseo del Hogar"},{"n":"Espaguetis Doria 500 g","p":1450,"c":"Despensa"},{"n":"Arroz Oriental La Pitadora 400 g","p":6750,"c":"Despensa"},{"n":"Chocolate Esparcible Nuss Milk 350 g","p":5950,"c":"Dulces y Pasabocas"},{"n":"Detergente Líquido Fab 1 800 ml","p":15700,"c":"Aseo del Hogar"},{"n":"Harina de Trigo La Oz 500 g","p":900,"c":"Despensa"},{"n":"Lomos de Pechuga de Pollo Adobados Bucanero 0.6 kg","p":11500,"c":"Carnes y Pescados"},{"n":"Pechuga de Pollo Ricachón 2 kg","p":8950,"c":"Carnes y Pescados"},{"n":"Sal Marina Refisal 800 g","p":2400,"c":"Despensa"},{"n":"Sal Común Refisal 1 000 g","p":1000,"c":"Despensa"},{"n":"Sal Común Refisal 130 g","p":650,"c":"Despensa"},{"n":"Salsa de Tomate en Doypack Bassi 400 g","p":2000,"c":"Frutas y Verduras"},{"n":"Vino Blanco Frontera 750 ml","p":18650,"c":"Licores"},{"n":"Vino Tinto Frontera 750 ml","p":18650,"c":"Licores"},{"n":"Vino Tinto Merlot Gato Negro 750 ml","p":21500,"c":"Mascotas"},{"n":"Vino Tinto Merlot Cabernet Sauvignon Gato Negro 750 ml","p":21500,"c":"Mascotas"},{"n":"Vino Tinto Malbec Gato Negro 750 ml","p":21500,"c":"Mascotas"},{"n":"Vino Tinto Shiraz Gato Negro 750 ml","p":21500,"c":"Mascotas"},{"n":"Vino Tinto de Cocina Sanson 750 ml","p":13200,"c":"Licores"},{"n":"Vino Tinto Támara 750 ml","p":14350,"c":"Licores"},{"n":"Vino Eira Dos Mouros 750 ml","p":15500,"c":"Licores"},{"n":"Vino Tinto Terras Do Pó 750 ml","p":14400,"c":"Licores"},{"n":"Nachos con Sabor a Queso Doritos 185 g","p":3400,"c":"Refrigerados"},{"n":"Nachos con Sabor a Queso Doritos 380 g","p":9800,"c":"Refrigerados"},{"n":"Harina de Maíz Amarilla La Oz 1 000 g","p":2250,"c":"Despensa"},{"n":"Jamón de Pollo Bajo en Grasa Pietrán 230 g","p":7900,"c":"Carnes y Pescados"},{"n":"Jamón de Cerdo Bajo en Grasa Pietrán 230 g","p":7150,"c":"Carnes y Pescados"},{"n":"Jamón de Cerdo Bajo en Grasa Zenú 450 g","p":8750,"c":"Carnes y Pescados"},{"n":"Lentejas Del Costal 500 g","p":1900,"c":"Despensa"},{"n":"Nachos Camote 160 g","p":2000,"c":"Dulces y Pasabocas"},{"n":"Vino Tinto Tempranillo Don Simón 750 ml","p":10650,"c":"Licores"},{"n":"Vino Tinto Cabernet Sauvignon Lazo 750 ml","p":23100,"c":"Licores"},{"n":"Harina de Maíz Amarilla La Oz 500 g","p":1350,"c":"Despensa"},{"n":"Harina de Maíz Blanca La Oz 1 000 g","p":2250,"c":"Despensa"},{"n":"Harina de Maíz Blanca La Oz 500 g","p":1200,"c":"Despensa"},{"n":"Harina de Maíz Blanca Pan 1 000 g","p":2900,"c":"Panadería"},{"n":"Leche en Polvo Entera De la Cuesta 350 g","p":5950,"c":"Refrigerados"},{"n":"Leche en Polvo Entera Colanta 1 000 g","p":16900,"c":"Refrigerados"},{"n":"Leche en Polvo Entera Klim 780 g","p":17200,"c":"Refrigerados"},{"n":"Quesillo en Lonchas Baltazar 400 g","p":5150,"c":"Refrigerados"},{"n":"Queso Campesino Entero Colanta 250 g","p":4200,"c":"Refrigerados"},{"n":"Queso Parmesano Rallado Alpina 100 g","p":5750,"c":"Refrigerados"},{"n":"Helado de Chocolate Popsy 650 g","p":17300,"c":"Dulces y Pasabocas"},{"n":"Helado de Vainilla con Chips de Chocolate Crem Helado 300 g","p":7900,"c":"Dulces y Pasabocas"},{"n":"Helado de Mandarina Popsy 600 g","p":17300,"c":"Dulces y Pasabocas"},{"n":"Helado de Fresa Robin Hood 330 g","p":7900,"c":"Frutas y Verduras"},{"n":"Helado de Ron con Pasas Robin Hood 330 g","p":7900,"c":"Licores"},{"n":"Helado de Chocolate Robin Hood 330 g","p":7900,"c":"Dulces y Pasabocas"},{"n":"Helado de Vainilla Robin Hood 330 g","p":7900,"c":"Dulces y Pasabocas"},{"n":"Helado de Vainilla Popsy 600 g","p":17300,"c":"Dulces y Pasabocas"},{"n":"Jabón en Barra para Bebé Bubu 125 g","p":1200,"c":"Cuidado Personal"},{"n":"Leche Condensada D'lish 400 g","p":3950,"c":"Refrigerados"},{"n":"Champú para Bebés de Cabellos Oscuros Arrurrú 620 ml","p":13500,"c":"Cuidado Personal"},{"n":"Champú para Bebés de Cabellos Claros Arrurrú 620 ml","p":13500,"c":"Cuidado Personal"},{"n":"Champú para Bebés Johnson's Baby 400 ml","p":14800,"c":"Cuidado Personal"},{"n":"Jabón en Barra para Bebé Bubu 125 g","p":1200,"c":"Cuidado Personal"},{"n":"Jabón en Barra Humectante Dove 270 g","p":7050,"c":"Cuidado Personal"},{"n":"Jabón en Barra de Avena Johnson's 375 g","p":6850,"c":"Cuidado Personal"},{"n":"Jabón en Barra para Bebé Johnson's Baby 375 g","p":7000,"c":"Cuidado Personal"},{"n":"Jabón en Barra Antibacterial con Omega 3 Protex 390 g","p":6800,"c":"Cuidado Personal"},{"n":"Jabón en Barra Baviera 480 g","p":3800,"c":"Cuidado Personal"},{"n":"Champú Anticaspa Dylia 400 ml","p":5950,"c":"Cuidado Personal"},{"n":"Champú para Bebés Bubu 400 ml","p":6000,"c":"Cuidado Personal"},{"n":"Champú para Bebés Bubu 400 ml","p":6000,"c":"Cuidado Personal"},{"n":"Champú Anticaída Dylia 400 ml","p":5950,"c":"Cuidado Personal"},{"n":"Champú Anticaída Elvive 400 ml","p":15250,"c":"Cuidado Personal"},{"n":"Champú Protector del Color Elvive 400 ml","p":15250,"c":"Cuidado Personal"},{"n":"Champú Densificador Elvive 400 ml","p":15250,"c":"Cuidado Personal"},{"n":"Champú para Cabellos Lisos Elvive 400 ml","p":15250,"c":"Cuidado Personal"},{"n":"Champú para Cabellos Risos Elvive 400 ml","p":15250,"c":"Cuidado Personal"},{"n":"Champú Reparador Elvive 400 ml","p":15250,"c":"Cuidado Personal"},{"n":"Champú Anticaspa 2 en 1 Head & Shoulders 400 ml","p":15950,"c":"Cuidado Personal"},{"n":"Café Tostado y Molido Medio Bicco 500 g","p":6050,"c":"Bebidas"},{"n":"Café Tostado y Molido Fuerte Bicco 500 g","p":6050,"c":"Bebidas"},{"n":"Café Tostado y Molido Medio Tres Molinos 250 g","p":6000,"c":"Bebidas"},{"n":"Café Tostado y Molido Medio Juan Valdez 250 g","p":11800,"c":"Bebidas"},{"n":"Café Tostado y Molido Fuerte Juan Valdez 250 g","p":11800,"c":"Bebidas"},{"n":"Cerveza Suave en Botella Corona 355 ml","p":3600,"c":"Licores"},{"n":"Champú Reparador Pantene 400 ml","p":13950,"c":"Cuidado Personal"},{"n":"Champú Varietal 750 ml","p":6100,"c":"Cuidado Personal"},{"n":"Champú Varietal 750 ml","p":6100,"c":"Cuidado Personal"},{"n":"Champú Varietal 750 ml","p":6100,"c":"Cuidado Personal"},{"n":"Blanqueador Agente X 2 000 ml","p":2100,"c":"Aseo del Hogar"},{"n":"Blanqueador con Aroma Floral Agente X 2 000 ml","p":2350,"c":"Aseo del Hogar"},{"n":"Blanqueador con Aroma a Limón Agente X 2 000 ml","p":2350,"c":"Aseo del Hogar"},{"n":"Blanqueador con Aroma a Lavanda BlancoX 1 000 ml","p":3550,"c":"Aseo del Hogar"},{"n":"Blanqueador con Aroma Floral BlancoX 1 000 ml","p":3550,"c":"Aseo del Hogar"},{"n":"Blanqueador con Aroma a Limón BlancoX 1 000 ml","p":3550,"c":"Aseo del Hogar"},{"n":"Blanqueador BlancoX 1 000 ml","p":3100,"c":"Aseo del Hogar"},{"n":"Cerveza Suave en Botella Corona 2 130 ml","p":21600,"c":"Licores"},{"n":"Cerveza Rubia en Lata Poker 1 980 ml","p":9900,"c":"Licores"},{"n":"Cerveza Rubia en Lata Poker 330 ml","p":1650,"c":"Licores"},{"n":"Agua en Botella Manantial 600 ml","p":1900,"c":"Bebidas"},{"n":"Agua en Botella Serranía 600 ml","p":700,"c":"Bebidas"},{"n":"Blanqueador con Aroma a Lavanda Clorox 2 000 ml","p":6800,"c":"Aseo del Hogar"},{"n":"Blanqueador Clorox 2 000 ml","p":6800,"c":"Aseo del Hogar"},{"n":"Blanqueador Límpido 1 000 ml","p":3250,"c":"Aseo del Hogar"},{"n":"Camarones El Gran Langostino 1 000 g","p":17800,"c":"Carnes y Pescados"},{"n":"Camarones Tigre Antillana 350 g","p":15000,"c":"Carnes y Pescados"},{"n":"Crema Dental Tricolor Colgate 300 ml","p":11750,"c":"Cuidado Personal"},{"n":"Café Instantáneo en Polvo Nescafé 170 g","p":10700,"c":"Bebidas"},{"n":"Panela Redonda Panela Tradición 835 g","p":3150,"c":"Despensa"},{"n":"Crema Dental Tricolor Colgate 50 ml","p":1950,"c":"Cuidado Personal"},{"n":"Crema Dental Tricolor Fluocardent 225 ml","p":7550,"c":"Cuidado Personal"},{"n":"Galletas Saladas Club Social 234 g","p":3650,"c":"Dulces y Pasabocas"},{"n":"Mayonesa Dietética Bassi 400 g","p":3050,"c":"Varios"},{"n":"Salsa de Queso Cheddar Camote 200 g","p":3100,"c":"Refrigerados"},{"n":"Servilletas de Cafetería Arbora 200 unidades","p":1100,"c":"Aseo del Hogar"},{"n":"Servilletas Cuadradas Arbora 200 unidades","p":2100,"c":"Aseo del Hogar"},{"n":"Servilletas Esponjadas Familia 200 unidades","p":5500,"c":"Aseo del Hogar"},{"n":"Servilletas Cuadradas de Lujo Extragrandes Súper Blank 40 unidades","p":1900,"c":"Aseo del Hogar"},{"n":"Tomate de Ara 500 g","p":2400,"c":"Frutas y Verduras"},{"n":"Avena en Harina Aveia 250 g","p":1400,"c":"Despensa"},{"n":"Avena en Hojuelas Don Pancho 250 g","p":2250,"c":"Despensa"},{"n":"Avena en Hojuelas Quaker 350 g","p":4900,"c":"Despensa"},{"n":"Avena Instantánea con Sabor a Fresa Aveia 200 g","p":1850,"c":"Frutas y Verduras"},{"n":"Avena Instantánea con Sabor a Vainilla Aveia 200 g","p":1850,"c":"Despensa"},{"n":"Galletas Dulces con Chips de Chocolate Chokis 240 g","p":4150,"c":"Dulces y Pasabocas"},{"n":"Galletas Dulces Surtidas Tartalet 170 g","p":2300,"c":"Dulces y Pasabocas"},{"n":"Galletas Dulces con Dulce Sabor a Durazno Tartalet 150 g","p":2500,"c":"Dulces y Pasabocas"},{"n":"Galletas Saladas PacoTaco 305 g","p":2050,"c":"Dulces y Pasabocas"},{"n":"Galletas Saladas PacoTaco 460 g","p":3100,"c":"Dulces y Pasabocas"},{"n":"Arroz Achocolatado Choco Krispis 320 g","p":8950,"c":"Despensa"},{"n":"Cereal Relleno Flips 120 g","p":4100,"c":"Varios"},{"n":"Hojuelas Azúcaradas Zucaritas 300 g","p":7400,"c":"Despensa"},{"n":"Galletas Dulces con Dulce Sabor a Mora Tartalet 150 g","p":2500,"c":"Frutas y Verduras"},{"n":"Granola con Frutas Heil 300 g","p":5750,"c":"Despensa"},{"n":"Granola con Frutas Heil 300 g","p":5750,"c":"Despensa"},{"n":"Granola con Pasas y Coco Heil 200 g","p":1800,"c":"Despensa"},{"n":"Granola Heil 200 g","p":1800,"c":"Despensa"},{"n":"Cereales para Bebé Nestum 350 g","p":10000,"c":"Bebés"},{"n":"Salchichas para Perro Caliente Zenú 480 g","p":7550,"c":"Mascotas"},{"n":"Arepas con Queso Don Maíz 340 g","p":5500,"c":"Panadería"},{"n":"Arepas Rellenas con Queso Don Maíz 400 g","p":4700,"c":"Panadería"},{"n":"Arepas con Queso Arepas de mi Casa 400 g","p":2100,"c":"Panadería"},{"n":"Arepas Amarillas con Sal Arepas de mi Casa 440 g","p":950,"c":"Panadería"},{"n":"Arepas Blancas con Sal Arepas de mi Casa 400 g","p":950,"c":"Panadería"},{"n":"Arepas Rellenas con Queso Arepas de mi Casa 340 g","p":3100,"c":"Panadería"},{"n":"Carne de Res para Asar o Freir de Ara 1 kg","p":19000,"c":"Carnes y Pescados"},{"n":"Carne de Res para Sudar de Ara 0.5 kg","p":7500,"c":"Carnes y Pescados"},{"n":"Vasos Desechables Darnel 20 unidades","p":1200,"c":"Aseo del Hogar"},{"n":"Yogur Entero en Vaso Activia 840 g","p":7800,"c":"Refrigerados"},{"n":"Aguardiente en Botella Aguardiente Antioqueño 750 ml","p":29950,"c":"Licores"},{"n":"Aguardiente sin Azúcar en Botella Aguardiente Antioqueño 375 ml","p":16900,"c":"Licores"},{"n":"Maíz Dulce en Lata Sembralta 340 g","p":3500,"c":"Dulces y Pasabocas"},{"n":"Pan Artesanal Artesano 390 g","p":4150,"c":"Panadería"},{"n":"Pan Integral Tajado Bimbo 460 g","p":4550,"c":"Panadería"},{"n":"Pan Integral Tajado con Nueces y Frutas Deshidratadas Bimbo 500 g","p":5150,"c":"Panadería"},{"n":"Pan Artesanal Tajado Artesano 500 g","p":4450,"c":"Panadería"},{"n":"Papas Fritas de Limón Margarita 110 g","p":2600,"c":"Dulces y Pasabocas"},{"n":"Papas Fritas de Pollo Margarita 110 g","p":2600,"c":"Carnes y Pescados"},{"n":"Vasos Desechables Tami 25 unidades","p":1400,"c":"Aseo del Hogar"},{"n":"Papas Fritas de Limón Margarita 300 g","p":9950,"c":"Dulces y Pasabocas"},{"n":"Papas Fritas Naturales Margarita 300 g","p":9950,"c":"Dulces y Pasabocas"},{"n":"Papas Fritas de Pollo Margarita 300 g","p":9950,"c":"Carnes y Pescados"},{"n":"Papas Fritas de Pollo Super Ricas 300 g","p":9150,"c":"Carnes y Pescados"},{"n":"Papas Fritas Naturales Margarita 110 g","p":2600,"c":"Dulces y Pasabocas"},{"n":"Papas Fritas de Limón Tojitos 115 g","p":1700,"c":"Dulces y Pasabocas"},{"n":"Papas Fritas Naturales Tojitos 115 g","p":1700,"c":"Dulces y Pasabocas"},{"n":"Papas Fritas de Pollo Tojitos 115 g","p":1700,"c":"Carnes y Pescados"},{"n":"Papas Fritas Tojitos 300 g","p":6350,"c":"Dulces y Pasabocas"},{"n":"Yogur Griego con Sabor a Fresa Alpina 150 g","p":2550,"c":"Frutas y Verduras"},{"n":"Chocolate en Pasta con Azúcar Danusia 500 g","p":3950,"c":"Despensa"},{"n":"Chocolate en Pasta con Azúcar la especial 500 g","p":4650,"c":"Despensa"},{"n":"Fríjoles Rojos Bola Roja Del Costal 500 g","p":2900,"c":"Despensa"},{"n":"Fríjoles Cargamanto Rosados Del Costal 500 g","p":2850,"c":"Despensa"},{"n":"Mortadelas Kai 225 g","p":1900,"c":"Carnes y Pescados"},{"n":"Mortadelas Zenú 450 g","p":5950,"c":"Carnes y Pescados"},{"n":"Suavizante para Ropa sin Enjuague Cottony 2 000 ml","p":5100,"c":"Aseo del Hogar"},{"n":"Suavizante para Ropa con Aroma Primaveral Suavitel 2 000 ml","p":9100,"c":"Aseo del Hogar"},{"n":"Yogur Griego con Sabor a Mora Alpina 150 g","p":2550,"c":"Frutas y Verduras"},{"n":"Yogur Griego con Sabor Natural Alpina 150 g","p":2550,"c":"Refrigerados"},{"n":"Jabón Lavaplatos en Crema con Aloe Vera Loza Crem 900 g","p":6800,"c":"Aseo del Hogar"},{"n":"Jabón Líquido Terapi Spa 1 000 ml","p":6800,"c":"Cuidado Personal"},{"n":"Jabón Lavaplatos en Crema con Avena Agente X 450 g","p":1950,"c":"Aseo del Hogar"},{"n":"Jabón Lavaplatos en Crema con Aloe Vera Agente X 450 g","p":1950,"c":"Aseo del Hogar"},{"n":"Jabón Lavaplatos en Crema Agente X 450 g","p":1950,"c":"Aseo del Hogar"},{"n":"Jabón Lavaplatos en Crema con Aroma a Limón Agente X 450 g","p":1950,"c":"Aseo del Hogar"},{"n":"Jabón Lavaplatos en Crema con Aroma a Limón Axion 450 g","p":4050,"c":"Aseo del Hogar"},{"n":"Miel de Abejas Natumiel 345 g","p":6850,"c":"Despensa"},{"n":"Salchichas Ahumadas para Parrilla Kai 225 g","p":4000,"c":"Carnes y Pescados"},{"n":"Salchichas Tradicionales Kai 450 g","p":4400,"c":"Carnes y Pescados"},{"n":"Gaseosa Cola Coca-Cola 1 500 ml","p":3000,"c":"Bebidas"},{"n":"Gaseosa Cola Coca-Cola 3 000 ml","p":5150,"c":"Bebidas"},{"n":"Gaseosa Cola Champaña Colombiana 3 125 ml","p":4500,"c":"Bebidas"},{"n":"Gaseosa de Manzana Postobón 3 125 ml","p":4500,"c":"Bebidas"},{"n":"Jabón Líquido Antibacterial Terapi Spa 900 ml","p":5950,"c":"Cuidado Personal"},{"n":"Jabón Líquido Antibacterial Terapi Spa 900 ml","p":5950,"c":"Cuidado Personal"},{"n":"Jabón Líquido Antibacterial Terapi Spa 900 ml","p":5950,"c":"Cuidado Personal"},{"n":"Jabón Líquido de Avena Terapy 500 ml","p":4900,"c":"Cuidado Personal"},{"n":"Jabón Líquido Terapy 500 ml","p":4900,"c":"Cuidado Personal"},{"n":"Gaseosa Cola Dietética sin Azúcar Coca-Cola 2 500 ml","p":4600,"c":"Bebidas"},{"n":"Gaseosa de Toronja Quatro 1 500 ml","p":2550,"c":"Bebidas"},{"n":"Gaseosa Cola Pow 400 ml","p":900,"c":"Bebidas"},{"n":"Gaseosa de Limón Pow 400 ml","p":900,"c":"Bebidas"},{"n":"Gaseosa de Manzana Pow 400 ml","p":900,"c":"Bebidas"},{"n":"Gaseosa Coca-Cola 1 896 ml","p":7400,"c":"Bebidas"},{"n":"Gaseosa de Lima-Limón Sprite 500 ml","p":1550,"c":"Bebidas"},{"n":"Gaseosa Cola Squiz 1 700 ml","p":1800,"c":"Bebidas"},{"n":"Gaseosa Cola Squiz 3 050 ml","p":3300,"c":"Bebidas"},{"n":"Gaseosa de Lima-Limón Squiz 1 700 ml","p":1800,"c":"Bebidas"},{"n":"Gaseosa de Manzana Squiz 1 700 ml","p":1800,"c":"Bebidas"},{"n":"Arequipe D'lish 250 g","p":3100,"c":"Dulces y Pasabocas"},{"n":"Brownies Mr. Brown 75 g","p":2100,"c":"Dulces y Pasabocas"},{"n":"Pasabocas Surtidos De Todito 300 g","p":7100,"c":"Dulces y Pasabocas"},{"n":"Garbanzos Del Costal 500 g","p":2450,"c":"Despensa"},{"n":"Bocaditos de Pollo Apanados Zenú 340 g","p":10500,"c":"Carnes y Pescados"},{"n":"Gaseosa Postobón 3 250 ml","p":8350,"c":"Bebidas"},{"n":"Papa Pastusa de Ara 2 kg","p":3000,"c":"Frutas y Verduras"},{"n":"Papa de Ara 2 kg","p":2900,"c":"Frutas y Verduras"},{"n":"Papa de Ara 0.5 kg","p":800,"c":"Frutas y Verduras"},{"n":"Polvo para Hornear de Ara 80 g","p":4250,"c":"Despensa"},{"n":"Pasabocas Surtidos De Todito 300 g","p":7100,"c":"Dulces y Pasabocas"},{"n":"Pasabocas Surtidos De Todito 300 g","p":7100,"c":"Dulces y Pasabocas"},{"n":"Jabón Azul para Ropa Rey 300 g","p":1500,"c":"Cuidado Personal"},{"n":"Pasabocas Surtidos Pungs 302 g","p":4850,"c":"Dulces y Pasabocas"},{"n":"Bebida Achocolatada Milo 500 g","p":13950,"c":"Bebidas"},{"n":"Pasabocas Surtidos Yupi 482 g","p":8650,"c":"Dulces y Pasabocas"},{"n":"Pasabocas Surtidos Frito Lay 250 g","p":4950,"c":"Dulces y Pasabocas"},{"n":"Pimentón de Ara 500 g","p":2600,"c":"Frutas y Verduras"},{"n":"Pasabocas Surtidos Tojitos 140 g","p":2500,"c":"Dulces y Pasabocas"},{"n":"Pasabocas Surtidos Todo Rico 270 g","p":6900,"c":"Dulces y Pasabocas"},{"n":"Chorizos de Res y Cerdo Ranchera 560 g","p":13850,"c":"Carnes y Pescados"},{"n":"Chorizos Santarrosanos Kai 360 g","p":6150,"c":"Carnes y Pescados"},{"n":"Crema Humectante Spírit 740 ml","p":6950,"c":"Cuidado Personal"},{"n":"Crema Humectante para Bebé Bubu 200 ml","p":4600,"c":"Bebés"},{"n":"Crema Humectante para Bebé Bubu 200 ml","p":4600,"c":"Bebés"},{"n":"Crema Humectante Lubriderm 200 ml","p":11750,"c":"Cuidado Personal"},{"n":"Jabón para Prendas Delicadas con Aroma a Coco Edén 200 g","p":1250,"c":"Cuidado Personal"},{"n":"Jabón Azul para Ropa Rey 900 g","p":4100,"c":"Cuidado Personal"},{"n":"Jabón para Prendas Delicadas Vel Rosita 220 g","p":2350,"c":"Cuidado Personal"},{"n":"Crema Humectante para Bebé Johnson's Baby 200 ml","p":11600,"c":"Bebés"},{"n":"Chocolate en Polvo sin Azúcar con Clavos y Canela Cocuy 120 g","p":2500,"c":"Despensa"},{"n":"Gelatina en Polvo Zaki 120 g","p":1950,"c":"Dulces y Pasabocas"},{"n":"Pasta para Lasaña Doria 200 g","p":3500,"c":"Despensa"},{"n":"Limón de Ara 500 g","p":4000,"c":"Frutas y Verduras"},{"n":"Maní Salado la especial 200 g","p":3800,"c":"Dulces y Pasabocas"},{"n":"Maní Salado Tote 175 g","p":3200,"c":"Dulces y Pasabocas"},{"n":"Mermelada de Fresa Glaz 180 g","p":2000,"c":"Frutas y Verduras"},{"n":"Mermelada de Mora Glaz 180 g","p":2000,"c":"Frutas y Verduras"},{"n":"Mermelada de Piña Glaz 180 g","p":2000,"c":"Dulces y Pasabocas"},{"n":"Mostaza en Doypack Bassi 180 g","p":1400,"c":"Despensa"},{"n":"Chocolatina Común Rellena con Arequipe Jet 180 g","p":5000,"c":"Dulces y Pasabocas"},{"n":"Bombón de Chocolate Feelings 200 g","p":12900,"c":"Dulces y Pasabocas"},{"n":"Bombón de Chocolate Ferrero Rocher 100 g","p":13000,"c":"Dulces y Pasabocas"},{"n":"Bombón de Chocolate Fontessa 200 g","p":12900,"c":"Dulces y Pasabocas"},{"n":"Bombón de Chocolate Praliness 200 g","p":12900,"c":"Dulces y Pasabocas"},{"n":"Chocolate en Polvo sin Azúcar Cocuy 120 g","p":2500,"c":"Despensa"},{"n":"Chocolate en Polvo sin Azúcar Cocuy 120 g","p":2500,"c":"Despensa"},{"n":"Desodorante en Aerosol Silken 175 ml","p":7100,"c":"Cuidado Personal"},{"n":"Desodorante en Aerosol Speed Stick 165 ml","p":14950,"c":"Cuidado Personal"},{"n":"Desodorante en Aerosol Tymek 175 ml","p":7100,"c":"Cuidado Personal"},{"n":"Chocolatina Común con Leche Jet 144 g","p":3950,"c":"Refrigerados"},{"n":"Chocolatina Común Recubierta con Dulce M&M's 48 g","p":2300,"c":"Dulces y Pasabocas"},{"n":"Galletas Integrales con Miel Tosh 270 g","p":4400,"c":"Dulces y Pasabocas"},{"n":"Galletas Integrales con Chips de Chocolate y Avena Aveia 156 g","p":2600,"c":"Dulces y Pasabocas"},{"n":"Galletas Integrales con Avena y Pasas Aveia 156 g","p":2600,"c":"Dulces y Pasabocas"},{"n":"Galletas Integrales Club Social 252 g","p":3650,"c":"Dulces y Pasabocas"},{"n":"Pañales Etapa 2 Winny 30 unidades","p":14950,"c":"Bebés"},{"n":"Pañales Etapa 2 Bubu 10 unidades","p":4950,"c":"Bebés"},{"n":"Toallas Higiénicas de Tela con Alas Nocturnas Rosé 8 unidades","p":3500,"c":"Cuidado Personal"},{"n":"Toallas Higiénicas de Tela con Alas Rosé 30 unidades","p":5200,"c":"Cuidado Personal"},{"n":"Alimento para Perros Adultos Dogourmet 1 000 g","p":7500,"c":"Mascotas"},{"n":"Alimento para Perros Adultos Rocku 4 000 g","p":11500,"c":"Mascotas"},{"n":"Alimento para Perros Adultos Dog Chow 100 g","p":2350,"c":"Mascotas"},{"n":"Papas Fritas en Fosforitos Tojos 200 g","p":1900,"c":"Dulces y Pasabocas"},{"n":"Ponqués Recubiertos con Chocolate Tolón 350 g","p":4200,"c":"Panadería"},{"n":"Ponqués Gala 384 g","p":7900,"c":"Panadería"},{"n":"Mini Ponqués Ramo 250 g","p":4200,"c":"Panadería"},{"n":"Ponqués Tolón 240 g","p":2300,"c":"Panadería"},{"n":"Ponqués Tolón 250 g","p":2050,"c":"Panadería"},{"n":"Ponqués Toloncitos 144 g","p":1750,"c":"Panadería"},{"n":"Duraznos en Almíbar Nutivia 820 g","p":5600,"c":"Varios"},{"n":"Fresa Congelada Pulpi Fresh 0.5 kg","p":3750,"c":"Frutas y Verduras"},{"n":"Manzana Roja de Ara 0.5 kg","p":5800,"c":"Frutas y Verduras"},{"n":"Manzana Gala de Ara 0.5 kg","p":5200,"c":"Frutas y Verduras"},{"n":"Manzana Verde de Ara 0.5 kg","p":8600,"c":"Frutas y Verduras"},{"n":"Mezcla de Nueces y Frutas Secas Tote 150 g","p":3500,"c":"Despensa"},{"n":"Mezcla de Nueces y Frutas Secas con Chocolates Tote 150 g","p":3500,"c":"Despensa"},{"n":"Salsa BBQ Bassi 180 g","p":1800,"c":"Despensa"},{"n":"Salsa BBQ Bassi 200 g","p":2450,"c":"Despensa"},{"n":"Gofres Mantel de Cuadros 216 g","p":3650,"c":"Panadería"},{"n":"Bolsas para Basura Tipo Apartamento Agente X 10 unidades","p":1750,"c":"Aseo del Hogar"},{"n":"Cebolla Blanca de Ara 500 g","p":2800,"c":"Frutas y Verduras"},{"n":"Maní con Pasas Tote 175 g","p":3200,"c":"Dulces y Pasabocas"},{"n":"Pañales Etapa 3 Winny 30 unidades","p":18450,"c":"Bebés"},{"n":"Pañales Etapa 4 Winny 30 unidades","p":21950,"c":"Bebés"},{"n":"Pañales Etapa 3 Bubu 10 unidades","p":5700,"c":"Bebés"},{"n":"Pañales Etapa 4 Bubu 10 unidades","p":6700,"c":"Bebés"},{"n":"Paños Húmedos para Bebé con Aloe Vera Bubu 63 unidades","p":3950,"c":"Bebés"},{"n":"Paños Húmedos para Bebé para Piel Sensible Bubu 63 unidades","p":3950,"c":"Bebés"},{"n":"Varsol Agente X 500 ml","p":4000,"c":"Aseo del Hogar"},{"n":"Fríjoles con Tocino Cheflisto 320 g","p":2400,"c":"Despensa"},{"n":"Paños Húmedos para Bebé Pequeñín 70 unidades","p":6600,"c":"Bebés"},{"n":"Paños Húmedos para Bebé Johnson's Baby 140 unidades","p":10800,"c":"Bebés"},{"n":"Plátano de Ara 0.5 kg","p":1800,"c":"Frutas y Verduras"},{"n":"Platos Desechables Darnel 20 unidades","p":2550,"c":"Aseo del Hogar"},{"n":"Platos Desechables de Ara 20 unidades","p":2000,"c":"Aseo del Hogar"},{"n":"Protectores Diarios Carefree 150 unidades","p":12700,"c":"Cuidado Personal"},{"n":"Protectores Diarios Multiestilo Rosé 120 unidades","p":7650,"c":"Cuidado Personal"},{"n":"Refresco con Sabor a Cítricos en Botella Frooti 3 050 ml","p":3600,"c":"Bebidas"},{"n":"Sardinas en Tomate Bocado de Mar 425 g","p":3950,"c":"Frutas y Verduras"},{"n":"Crema Antipañalitis Bubu 20 g","p":3050,"c":"Bebés"},{"n":"Crema Antipañalitis Crema No. 4 20 g","p":5300,"c":"Bebés"},{"n":"Fríjoles con Salchicha Cheflisto 320 g","p":2700,"c":"Carnes y Pescados"},{"n":"Limpiador Líquido con Bicarbonato con Aroma Cítrico Agente X 960 ml","p":2200,"c":"Aseo del Hogar"},{"n":"Limpiador Líquido Antibacterial con Aroma a Lavanda Fabuloso 1 000 ml","p":5500,"c":"Aseo del Hogar"},{"n":"Palitos de Yuca Congelados McCain 1 000 g","p":8700,"c":"Despensa"},{"n":"Palitos de Yuca Congelados McCain 500 g","p":5600,"c":"Despensa"},{"n":"Vinagre Balsámico La Coruña 200 ml","p":4550,"c":"Despensa"},{"n":"Vinagre Blanco Bassi 500 ml","p":1400,"c":"Despensa"},{"n":"Vinagre de Frutas Bassi 500 ml","p":1400,"c":"Despensa"},{"n":"Acondicionador Protector del Color Elvive 400 ml","p":15250,"c":"Cuidado Personal"},{"n":"Acondicionador Elvive 400 ml","p":15250,"c":"Cuidado Personal"},{"n":"Acondicionador para Cabellos Lisos Elvive 400 ml","p":15250,"c":"Cuidado Personal"},{"n":"Acondicionador para Cabellos Risos Elvive 400 ml","p":15250,"c":"Cuidado Personal"},{"n":"Acondicionador Reparador Elvive 400 ml","p":15250,"c":"Cuidado Personal"},{"n":"Acondicionador con Aceite de Argán Dylia 300 ml","p":4950,"c":"Cuidado Personal"},{"n":"Acondicionador Reparador Pantene 400 ml","p":13950,"c":"Cuidado Personal"},{"n":"Cepillo de Dientes para Niños Cristal Ice 1 unidad","p":1200,"c":"Cuidado Personal"},{"n":"Cepillo de Dientes Medio Cristal Ice 1 unidad","p":1400,"c":"Cuidado Personal"},{"n":"Salsa de Soya Bassi 155 ml","p":1250,"c":"Despensa"},{"n":"Aceitunas Verdes Rellenas con Pimentón Sembralta 250 g","p":3500,"c":"Frutas y Verduras"},{"n":"Aceitunas Deshuesadas Sembralta 250 g","p":3500,"c":"Varios"},{"n":"Aceitunas Verdes Deshuesadas Sembralta 250 g","p":3500,"c":"Varios"},{"n":"Ambientador en Aerosol con Aroma a Frutos Rojos Brisheo 400 ml","p":5650,"c":"Aseo del Hogar"},{"n":"Ambientador en Aerosol con Aroma a Lavanda Brisheo 400 ml","p":5650,"c":"Aseo del Hogar"},{"n":"Ambientador en Aerosol con Aroma a Canela y Manzana Brisheo 400 ml","p":5650,"c":"Aseo del Hogar"},{"n":"Ambientador en Aerosol con Aroma a Pera Brisheo 400 ml","p":5650,"c":"Aseo del Hogar"},{"n":"Cepillo de Dientes Cristal Ice 3 unidades","p":4100,"c":"Cuidado Personal"},{"n":"Cepillo de Dientes Suave Oral-B 3 unidades","p":9500,"c":"Cuidado Personal"},{"n":"Removedor Durex 100 ml","p":2600,"c":"Varios"},{"n":"Arándanos Deshidratados Tote 140 g","p":4450,"c":"Varios"},{"n":"Enjuague Bucal Cristal Ice 500 ml","p":5650,"c":"Varios"},{"n":"Enjuague Bucal Cristal Ice 500 ml","p":5650,"c":"Varios"},{"n":"Té Negro Frío con Sabor a Limón Fuze Tea 400 ml","p":1600,"c":"Bebidas"},{"n":"Galletas Sánduche de Chocolate Rellenas con Crema Sabor a Vainilla Oreo 432 g","p":5900,"c":"Dulces y Pasabocas"},{"n":"Enjuague Bucal Listerine 500 ml","p":13950,"c":"Varios"},{"n":"Mayonesa y Mostaza La Constancia 200 g","p":4300,"c":"Despensa"},{"n":"Salsa para Carnes Bassi 175 g","p":1800,"c":"Despensa"},{"n":"Mayonesa y Mostaza Bassi 200 g","p":2450,"c":"Despensa"},{"n":"Suero Costeño Klaren's 200 g","p":2800,"c":"Varios"},{"n":"Canela en Astilla El Rey 20 g","p":2850,"c":"Varios"},{"n":"Máquina para Afeitar de 3 Hojas Gillette 4 unidades","p":7000,"c":"Cuidado Personal"},{"n":"Desodorante en Barra Lady Speed Stick 45 g","p":12950,"c":"Cuidado Personal"},{"n":"Desodorante en Barra Clínico Rexona 48 g","p":17450,"c":"Cuidado Personal"},{"n":"Desodorante en Barra Rexona 100 g","p":21900,"c":"Cuidado Personal"},{"n":"Desodorante en Barra Clínico Rexona 48 g","p":17450,"c":"Cuidado Personal"},{"n":"Desodorante de Bola Silken 60 ml","p":4300,"c":"Cuidado Personal"},{"n":"Desodorante en Barra Speed Stick 50 g","p":12950,"c":"Cuidado Personal"},{"n":"Guante Doméstico Agente X 1 par","p":1900,"c":"Varios"},{"n":"Máquina para Afeitar de 2 Hojas Silken 4 unidades","p":4800,"c":"Cuidado Personal"},{"n":"Alcohol Remy 345 ml","p":1600,"c":"Varios"},{"n":"Palitos de Queso Farah 450 g","p":13500,"c":"Refrigerados"},{"n":"Empanadas con Carne Don Maíz 400 g","p":6300,"c":"Varios"},{"n":"Fécula de Maíz Maizena 90 g","p":1750,"c":"Varios"},{"n":"Máquina para Afeitar de 3 Hojas Silken 2 unidades","p":2850,"c":"Cuidado Personal"},{"n":"Máquina para Afeitar de 2 Hojas Tymek 4 unidades","p":4800,"c":"Cuidado Personal"},{"n":"Máquina para Afeitar de 3 Hojas Tymek 2 unidades","p":2850,"c":"Cuidado Personal"},{"n":"Máquina para Afeitar de 3 Hojas Gillette 2 unidades","p":10950,"c":"Cuidado Personal"},{"n":"Salsa Rosada Bassi 200 g","p":1200,"c":"Despensa"},{"n":"Pasas Emilu 150 g","p":1850,"c":"Varios"},{"n":"Alimento para Gatos Seco Dalí 500 g","p":2400,"c":"Mascotas"},{"n":"Caldo de Gallina A La Mesa 84 g","p":1500,"c":"Despensa"},{"n":"Esponja Doble Uso Agente X 2 unidades","p":1950,"c":"Aseo del Hogar"},{"n":"Lechuga Crespa Verde de Ara 150 g","p":1700,"c":"Frutas y Verduras"},{"n":"Caldo de Gallina Maggi 132 g","p":3300,"c":"Despensa"},{"n":"Talco para Pies 2 Pies 230 g","p":7100,"c":"Varios"},{"n":"Té Instantáneo con Sabor a Frutos Rojos Frutea 9 l","p":4900,"c":"Bebidas"},{"n":"Té Instantáneo con Sabor a Mandarina Frutea 9 l","p":4900,"c":"Bebidas"},{"n":"Té Instantáneo con Sabor a Durazno Frutea 9 l","p":4900,"c":"Bebidas"},{"n":"Té Instantáneo con Sabor a Limón Frutea 9 l","p":4900,"c":"Bebidas"},{"n":"Agua con Gas Manantial 600 ml","p":1900,"c":"Bebidas"},{"n":"Agua con Gas Serranía 600 ml","p":700,"c":"Bebidas"},{"n":"Bocadillos Bocaricos 250 g","p":2550,"c":"Varios"},{"n":"Chuzos de Pollo Bucanero 540 g","p":8850,"c":"Carnes y Pescados"},{"n":"Chuzos de Pollo Apanados Calypso 300 g","p":6650,"c":"Carnes y Pescados"},{"n":"Filete de Salmón Ancla & Viento 100 g","p":10450,"c":"Carnes y Pescados"},{"n":"Té Verde con Sabor a Limón Aleli 30 g","p":3450,"c":"Bebidas"},{"n":"Té Verde con Flor de Jamaica Aleli 30 g","p":3450,"c":"Bebidas"},{"n":"Tostadas Integrales Guadalupe 280 g","p":4050,"c":"Panadería"},{"n":"Tostadas con Mantequilla Guadalupe 280 g","p":3950,"c":"Panadería"},{"n":"Arvejas Del Costal 0.5 kg","p":1100,"c":"Varios"},{"n":"Desmanchador para Ropa de Color Líquido BlancoX 1 000 ml","p":5950,"c":"Varios"},{"n":"Desmanchador para Ropa de Color Líquido BlancoX 1 000 ml","p":5950,"c":"Varios"},{"n":"Desmanchador para Ropa de Color Líquido Edén 1 000 ml","p":2000,"c":"Varios"},{"n":"Bocadillos con Manjar Blanco Bocaricos 280 g","p":3200,"c":"Varios"},{"n":"Bocadillos Veleños Bocaricos 345 g","p":2750,"c":"Varios"},{"n":"Champiñones en Conserva Tajados Sembralta 280 g","p":4150,"c":"Varios"},{"n":"Gel Antibacterial Bondi 300 ml","p":3550,"c":"Varios"},{"n":"Maíz Pira Del Costal 500 g","p":1250,"c":"Varios"},{"n":"Papa Criolla de Ara 0.5 kg","p":3600,"c":"Varios"},{"n":"Aromática de Cedrón Aleli 25 g","p":2100,"c":"Varios"},{"n":"Aromática de Manzanilla Aleli 25 g","p":2100,"c":"Varios"},{"n":"Aromática de Yerbabuena Aleli 25 g","p":2100,"c":"Varios"},{"n":"Espuma de Afeitar Tymek 294 g","p":6950,"c":"Cuidado Personal"},{"n":"Limpiavidrios en Espray Agente X 1 000 ml","p":3800,"c":"Varios"},{"n":"Tampones sin Aplicador para Flujo Fuerte o.b. 10 unidades","p":6700,"c":"Varios"},{"n":"Tampones sin Aplicador para Flujo Medio o.b. 10 unidades","p":6700,"c":"Varios"},{"n":"Desmanchador para Ropa de Color Líquido Vanish 450 ml","p":3150,"c":"Varios"},{"n":"Whisky Johnnie Walker 750 ml","p":49800,"c":"Licores"},{"n":"Whisky 12 Años Old Parr 750 ml","p":89950,"c":"Licores"},{"n":"Espinaca de Ara 200 g","p":2000,"c":"Frutas y Verduras"},{"n":"Leche con Sabor a Chocolate en Caja Tiki 200 ml","p":1000,"c":"Refrigerados"},{"n":"Leche con Sabor a Fresa en Caja Tiki 200 ml","p":1000,"c":"Frutas y Verduras"},{"n":"Leche con Sabor a Vainilla en Caja Tiki 200 ml","p":1000,"c":"Refrigerados"},{"n":"Ron en Botella Viejo de Caldas 375 ml","p":18200,"c":"Licores"},{"n":"Ron en Botella Viejo de Caldas 750 ml","p":34450,"c":"Licores"},{"n":"Tampones sin Aplicador para Flujo Medio Rosé 10 unidades","p":3400,"c":"Varios"},{"n":"Tampones sin Aplicador para Flujo Fuerte Rosé 10 unidades","p":2950,"c":"Varios"},{"n":"Trapeador de Ara 1 unidad","p":5600,"c":"Varios"},{"n":"Leche Saborizada en Bolsa Colanta 200 ml","p":3100,"c":"Refrigerados"},{"n":"Alcaparras Sembralta 125 g","p":2150,"c":"Varios"},{"n":"Energizante Be Power 250 ml","p":1100,"c":"Bebidas"},{"n":"Cerezas en Conserva Nutivia 125 g","p":3150,"c":"Varios"},{"n":"Salsa Boloñesa Minotto 480 g","p":5100,"c":"Despensa"},{"n":"Salsa Napolitana Minotto 480 g","p":5100,"c":"Despensa"},{"n":"Salsa Negra Bassi 165 g","p":1250,"c":"Despensa"},{"n":"Agua Perfumada Spírit 260 ml","p":8950,"c":"Bebidas"},{"n":"Agua Perfumada Spírit 260 ml","p":8950,"c":"Bebidas"},{"n":"Agua Perfumada Spírit 260 ml","p":8950,"c":"Bebidas"},{"n":"Agua Perfumada Spírit 260 ml","p":9999,"c":"Bebidas"},{"n":"Energizante Be Power 750 ml","p":3000,"c":"Bebidas"},{"n":"Carne de Cerdo Molida de Ara 0.5 kg","p":5650,"c":"Carnes y Pescados"},{"n":"Cucharas Desechables Tami 20 unidades","p":1000,"c":"Varios"},{"n":"Paño Absorbente Agente X 2 unidades","p":3000,"c":"Varios"},{"n":"Paño Absorbente Agente X 1 unidad","p":1100,"c":"Varios"},{"n":"Paño Absorbente Agente X 3 unidades","p":2350,"c":"Varios"},{"n":"Carne de Cerdo de Ara 0.5 kg","p":6900,"c":"Carnes y Pescados"},{"n":"Energizante sin Azúcar Red Bull 250 ml","p":4500,"c":"Bebidas"},{"n":"Tenedores Desechables Tami 20 unidades","p":1000,"c":"Varios"},{"n":"Vegetales Mixtos Congelados Calypso 500 g","p":3500,"c":"Varios"},{"n":"Caramelo Blando con Sabor a Chocolate Bruly 120 g","p":1500,"c":"Varios"},{"n":"Chicharrón La Victoria 0.11 kg","p":5500,"c":"Varios"},{"n":"Compota de Frutas Mixtas Heinz 113 g","p":2550,"c":"Bebés"},{"n":"Compota de Durazno Bubu 113 g","p":1200,"c":"Bebés"},{"n":"Compota de Manzana Bubu 113 g","p":1200,"c":"Bebés"},{"n":"Compota de Pera Bubu 113 g","p":1200,"c":"Bebés"},{"n":"Crema para Café Lacrem 175 g","p":3050,"c":"Bebidas"},{"n":"Galletas Doradas Semidulces Ducales 484 g","p":5600,"c":"Dulces y Pasabocas"},{"n":"Compota de Frutas Mixtas Heinz 113 g","p":2550,"c":"Bebés"},{"n":"Pepino de Ara 500 g","p":2000,"c":"Frutas y Verduras"},{"n":"Barra de Cereal con Frutas Heil 138 g","p":3950,"c":"Varios"},{"n":"Compota de Manzana Heinz 113 g","p":2550,"c":"Bebés"},{"n":"Compota de Pera Heinz 113 g","p":2550,"c":"Bebés"},{"n":"Jabón Íntimo Rosé 275 ml","p":4700,"c":"Cuidado Personal"},{"n":"Jabón Íntimo Rosé 275 ml","p":4700,"c":"Cuidado Personal"},{"n":"Naranja Tangelo Tangelo 1.5 kg","p":5000,"c":"Frutas y Verduras"},{"n":"Naranja Valencia de Ara 0.5 kg","p":1400,"c":"Frutas y Verduras"},{"n":"Toallas de Cocina Desechables Doble Hoja Arbora 135 unidades","p":3100,"c":"Varios"},{"n":"Toallas de Cocina Desechables Favorita 45 unidades","p":1750,"c":"Varios"},{"n":"Toallas de Cocina Desechables Doble Hoja Familia 150 unidades","p":3800,"c":"Varios"},{"n":"Alas de Pollo Adobadas con Salsa BBQ Bucanero 0.9 kg","p":8300,"c":"Carnes y Pescados"},{"n":"Néctar de Durazno California 215 ml","p":1450,"c":"Bebidas"},{"n":"Néctar de Durazno California 1 000 ml","p":4250,"c":"Bebidas"},{"n":"Néctar de Durazno California 1 290 ml","p":8400,"c":"Bebidas"},{"n":"Néctar de Fruta California 1 200 ml","p":7600,"c":"Bebidas"},{"n":"Néctar de Fruta Solei 1 200 ml","p":3950,"c":"Bebidas"},{"n":"Néctar de Manzana California 215 ml","p":1450,"c":"Bebidas"},{"n":"Néctar de Pera California 215 ml","p":1450,"c":"Bebidas"},{"n":"Toallas Desmaquillantes Spírit 25 unidades","p":3300,"c":"Varios"},{"n":"Pasta para el Tanque del Sanitario Agente X 52 g","p":2950,"c":"Despensa"},{"n":"Filete de Róbalo Antillana 350 g","p":19700,"c":"Varios"},{"n":"Salchichón Cervecero Zenú 900 g","p":12450,"c":"Carnes y Pescados"},{"n":"Coloración Capilar Permanente Nutrisse 1 unidad","p":9000,"c":"Varios"},{"n":"Coloración Capilar Permanente Nutrisse 1 unidad","p":9000,"c":"Varios"},{"n":"Coloración Capilar Permanente Nutrisse 1 unidad","p":9000,"c":"Varios"},{"n":"Coloración Capilar Permanente Nutrisse 1 unidad","p":9000,"c":"Varios"},{"n":"Coloración Capilar Permanente Nutrisse 1 unidad","p":9000,"c":"Varios"},{"n":"Coloración Capilar Permanente Nutrisse 1 unidad","p":9000,"c":"Varios"},{"n":"Coloración Capilar Permanente Nutrisse 1 unidad","p":9000,"c":"Varios"},{"n":"Coloración Capilar Permanente Nutrisse 1 unidad","p":9000,"c":"Varios"},{"n":"Gomas Comunes Dulces Trululu 90 g","p":1200,"c":"Dulces y Pasabocas"},{"n":"Gomas Comunes Dulces Trululu 90 g","p":1200,"c":"Dulces y Pasabocas"},{"n":"Gomas Comunes Dulces Vidal 100 g","p":3100,"c":"Dulces y Pasabocas"},{"n":"Gomas Comunes Dulces Trululu 90 g","p":1200,"c":"Dulces y Pasabocas"},{"n":"Gomas Comunes Dulces Trululu 90 g","p":1200,"c":"Dulces y Pasabocas"},{"n":"Gomas Comunes Dulces Trululu 90 g","p":1200,"c":"Dulces y Pasabocas"},{"n":"Gomas Comunes Dulces Trululu 90 g","p":1200,"c":"Dulces y Pasabocas"},{"n":"Gomas Comunes Dulces Trululu 90 g","p":1200,"c":"Dulces y Pasabocas"},{"n":"Gomas Comunes Dulces Trululu 90 g","p":1200,"c":"Dulces y Pasabocas"},{"n":"Coloración Capilar Permanente Nutrisse 1 unidad","p":9000,"c":"Varios"},{"n":"Crema para Peinar con Keratina Dylia 300 ml","p":4950,"c":"Varios"},{"n":"Crema de Ajiaco La Pitadora 400 g","p":6750,"c":"Varios"},{"n":"Bebida de Aloe Vera Metoo 500 ml","p":2650,"c":"Varios"},{"n":"Leche con Avena en Vaso Alpina 250 ml","p":2150,"c":"Refrigerados"},{"n":"Leche con Avena en Bolsa D'lish 200 ml","p":700,"c":"Refrigerados"},{"n":"Crema de Champiñones A La Mesa 42 g","p":1000,"c":"Varios"},{"n":"Crema de Pollo A La Mesa 42 g","p":1000,"c":"Carnes y Pescados"},{"n":"Crema de Tomate A La Mesa 42 g","p":1000,"c":"Frutas y Verduras"},{"n":"Crema para Peinar para Cabellos Risos Pantene 160 ml","p":6650,"c":"Varios"},{"n":"Pasta en Conchas Doria 250 g","p":1500,"c":"Despensa"},{"n":"Malta Pony Malta 1 000 ml","p":1950,"c":"Varios"},{"n":"Crema para Peinar para Cabellos Risos Sedal 600 ml","p":18300,"c":"Varios"},{"n":"Cintas de Gomas Ácidas Vidal 100 g","p":3100,"c":"Varios"},{"n":"Cintas de Gomas Dulces Vidal 100 g","p":3100,"c":"Dulces y Pasabocas"},{"n":"Cintas de Gomas Dulces Vidal 100 g","p":3100,"c":"Dulces y Pasabocas"},{"n":"Cintas de Gomas Ácidas Trululu 90 g","p":1200,"c":"Varios"},{"n":"Malta Pony Malta 1 500 ml","p":3100,"c":"Varios"},{"n":"Malta Pony Malta 330 ml","p":1300,"c":"Varios"},{"n":"Malta Pony Malta 1 980 ml","p":7800,"c":"Varios"},{"n":"Malta Pony Malta 200 ml","p":750,"c":"Varios"},{"n":"Algodón Arbora 75 g","p":1400,"c":"Varios"},{"n":"Apio de Ara 700 g","p":1600,"c":"Frutas y Verduras"},{"n":"Filete de Tilapia El Gran Langostino 500 g","p":11100,"c":"Carnes y Pescados"},{"n":"Maíz en Mazorca Común de Ara 0.5 kg","p":2500,"c":"Varios"},{"n":"Pizza Hawaiana Delicias Orientales 130 g","p":2750,"c":"Varios"},{"n":"Pizza de Jamón y Queso Delicias Orientales 130 g","p":2750,"c":"Carnes y Pescados"},{"n":"Malta Pony Malta 1 200 ml","p":4500,"c":"Varios"},{"n":"Salchichas Viena en Lata Cheflisto 150 g","p":1800,"c":"Carnes y Pescados"},{"n":"Hilo Dental con Cera y Sabor a Menta Cristal Ice 100 m","p":3800,"c":"Varios"},{"n":"Hilo Dental con Cera y Sabor a Menta Reach 50 m","p":9500,"c":"Varios"},{"n":"Bebida Láctea con Cereales Bon Yurt 509 g","p":6250,"c":"Varios"},{"n":"Bombón con Sabor a Fresa y Goma de Mascar Bon Bon Bum 240 g","p":3300,"c":"Frutas y Verduras"},{"n":"Caldo de Costilla A La Mesa 84 g","p":1500,"c":"Despensa"},{"n":"Caldo de Costilla Maggi 80 g","p":2200,"c":"Despensa"},{"n":"Extruídos de Maíz con Queso Cheese Tris 93 g","p":1300,"c":"Refrigerados"},{"n":"Extruídos de Maíz con Queso Chiksis 240 g","p":3000,"c":"Refrigerados"},{"n":"Maní Recubierto con Harina de Trigo Tote 200 g","p":3300,"c":"Dulces y Pasabocas"},{"n":"Recogedor de Ara 1 unidad","p":3200,"c":"Varios"},{"n":"Refresco Instantáneo con Sabor a Naranja Frooti 2 l","p":600,"c":"Bebidas"},{"n":"Tomate de Árbol de Ara 500 g","p":3600,"c":"Frutas y Verduras"},{"n":"Gel Fijador Capilar Fuerte Moco de Gorila 270 g","p":10700,"c":"Varios"},{"n":"Corazones de Hojaldre Las Caseritas 220 g","p":2600,"c":"Varios"},{"n":"Mora Congelada Pulpi Fresh 500 g","p":3750,"c":"Frutas y Verduras"},{"n":"Quitagrasa en Espray Agente X 1 000 ml","p":3700,"c":"Varios"},{"n":"Refresco Instantáneo con Sabor Tropical Frooti 2 l","p":600,"c":"Bebidas"},{"n":"Salsa de Ají Bassi 165 g","p":1250,"c":"Despensa"},{"n":"Salsa Inglesa Bassi 165 g","p":1800,"c":"Despensa"},{"n":"Salsa de Ajo Bassi 165 g","p":1850,"c":"Despensa"},{"n":"Sopa con Fideos con Sabor a Carne Maruchan 85 g","p":1300,"c":"Despensa"},{"n":"Bebida Nutricional en Polvo con Sabor a Vainilla JGB 9.3 l","p":11700,"c":"Bebidas"},{"n":"Aceite para Bebé Johnson's Baby 100 ml","p":6750,"c":"Despensa"},{"n":"Costilla de Res de Ara 0.5 kg","p":6200,"c":"Varios"},{"n":"Betún de Pasta de Color Café Búfalo 36 g","p":2950,"c":"Bebidas"},{"n":"Betún de Pasta de Color Negro Búfalo 36 g","p":2950,"c":"Despensa"},{"n":"Betún de Pasta de Color Rojo Búfalo 36 g","p":2950,"c":"Despensa"},{"n":"Pera de Ara 0.44 kg","p":4000,"c":"Frutas y Verduras"},{"n":"Salsa de Curry Bassi 170 g","p":1850,"c":"Despensa"},{"n":"Velón de Ara 1 unidad","p":1900,"c":"Varios"},{"n":"Velón de Ara 1 unidad","p":1900,"c":"Varios"},{"n":"Velón de Ara 1 unidad","p":1900,"c":"Varios"},{"n":"Betún Líquido Autobrillante de Color Azul Búfalo 60 ml","p":4950,"c":"Varios"},{"n":"Betún Líquido Autobrillante de Color Café Búfalo 60 ml","p":4950,"c":"Bebidas"},{"n":"Betún Líquido Autobrillante de Color Negro Búfalo 60 ml","p":4950,"c":"Varios"},{"n":"Betún de Pasta Neutro Búfalo 36 g","p":2950,"c":"Despensa"},{"n":"Pilas AA Tronex 2 unidades","p":1950,"c":"Varios"},{"n":"Pilas AAA Tronex 2 unidades","p":1950,"c":"Varios"},{"n":"Pollo Entero Pimpollo 1.5 kg","p":10500,"c":"Carnes y Pescados"},{"n":"Bebida Nutricional en Polvo con Sabor a Chocolate JGB 9.3 l","p":11700,"c":"Bebidas"},{"n":"Bebida Nutricional en Polvo con Sabor a Fresa JGB 9.3 l","p":11700,"c":"Bebidas"},{"n":"Bebida Nutricional en Polvo JGB 9.3 l","p":11700,"c":"Bebidas"},{"n":"Bebida Hidratante Líquida con Sabor Tropical Gatorade 500 ml","p":2350,"c":"Mascotas"},{"n":"Besitos Rosco's 80 g","p":1850,"c":"Varios"},{"n":"Betún Líquido Autobrillante de Color Blanco Búfalo 60 ml","p":4950,"c":"Varios"},{"n":"Jalea de Guayaba Bocaricos 414 g","p":1600,"c":"Frutas y Verduras"},{"n":"Insecticida contra Voladores Bichek 250 ml","p":6850,"c":"Varios"},{"n":"Pandeyuca Panadería La 96 90 g","p":2200,"c":"Panadería"},{"n":"Rosquillas Rosco's 80 g","p":1850,"c":"Varios"},{"n":"Platos Hondos Desechables de Ara 20 unidades","p":4250,"c":"Varios"},{"n":"Alimento Húmedo para Gatos Felix 85 g","p":2350,"c":"Mascotas"},{"n":"Salsa Teriyaki Bassi 180 g","p":1850,"c":"Despensa"},{"n":"Bebida Hidratante Líquida con Sabor a Mandarina Gatorade 500 ml","p":2350,"c":"Mascotas"},{"n":"Bombillo Ahorrador Fluorescente de Luz Blanca 20W Topluz 1 unidad","p":6000,"c":"Varios"},{"n":"Galletas con Caramelo Recubiertas con Chocolate Snickers 53 g","p":2350,"c":"Dulces y Pasabocas"},{"n":"Galletas con Caramelo Recubiertas con Chocolate Milky Way 52 g","p":2350,"c":"Dulces y Pasabocas"},{"n":"Galletas con Caramelo Recubiertas con Chocolate Snickers 52 g","p":2350,"c":"Dulces y Pasabocas"},{"n":"Curitas Cureband 30 unidades","p":4000,"c":"Varios"},{"n":"Plástico Adherente Opa 20 m","p":1350,"c":"Varios"},{"n":"Pulpa de Fruta Chupable de Mango Solei 90 g","p":1500,"c":"Varios"},{"n":"Pulpa de Lulo Solei 250 g","p":2350,"c":"Varios"},{"n":"Bebida Hidratante Líquida Powerade 1 500 ml","p":4200,"c":"Varios"},{"n":"Queso Cuchareable Endulzado Alpinito 45 g","p":9700,"c":"Refrigerados"},{"n":"Arvejas y Zanahorias en Lata Sembralta 320 g","p":1850,"c":"Varios"},{"n":"Cepillo para Ropa de Ara 1 unidad","p":2850,"c":"Varios"},{"n":"Paño Abrasivo Agente X 2 unidades","p":800,"c":"Varios"},{"n":"Guante Semi Industrial Agente X 1 par","p":1900,"c":"Varios"},{"n":"Guayaba de Ara 0.5 kg","p":1800,"c":"Frutas y Verduras"},{"n":"Pulpa de Fruta Chupable de Manzana Solei 90 g","p":1500,"c":"Frutas y Verduras"},{"n":"Pulpa de Fruta Chupable de Pera Solei 90 g","p":1500,"c":"Frutas y Verduras"},{"n":"Pulpa de Guanabana Solei 250 g","p":2350,"c":"Varios"},{"n":"Velas Blancas de Ara 10 unidades","p":3000,"c":"Varios"},{"n":"Base para Salsa Bechamel Minotto 50 g","p":1950,"c":"Despensa"},{"n":"Mezcla para Arepas de Choclo Pan 1 000 g","p":5300,"c":"Panadería"},{"n":"Pastel de Guayaba Las Caseritas 220 g","p":2600,"c":"Frutas y Verduras"},{"n":"Maíz Trillado Amarillo Del Costal 500 g","p":950,"c":"Varios"},{"n":"Maíz Trillado Blanco Del Costal 1 000 g","p":1700,"c":"Varios"},{"n":"Mandarina de Ara 0.5 kg","p":3400,"c":"Varios"},{"n":"Papaya de Ara 0.5 kg","p":2000,"c":"Frutas y Verduras"},{"n":"Pulpa de Maracuyá Solei 250 g","p":2350,"c":"Varios"},{"n":"Pulpa de Mora Solei 250 g","p":2350,"c":"Frutas y Verduras"},{"n":"Vitamina C Mk 6 000 mg","p":6950,"c":"Varios"},{"n":"Coctel Smirnoff 250 ml","p":3850,"c":"Varios"},{"n":"Colada con Sabor a Arequipe Maizena 30 g","p":900,"c":"Dulces y Pasabocas"},{"n":"Colada con Sabor a Fresa Maizena 30 g","p":900,"c":"Frutas y Verduras"},{"n":"Colada con Sabor a Vainilla Maizena 30 g","p":900,"c":"Varios"},{"n":"Cuchuco de Maíz Del Costal 500 g","p":950,"c":"Varios"},{"n":"Encendedor Eléctrico Swiss Lite 2 unidades","p":1900,"c":"Varios"},{"n":"Rollo de Helado Cremato 480 g","p":8400,"c":"Dulces y Pasabocas"},{"n":"Pulpa de Mango Solei 250 g","p":2350,"c":"Varios"},{"n":"Pulpa de Tamarindo Solei 250 g","p":2350,"c":"Varios"},{"n":"Talco para Bebé Johnson's 200 g","p":13800,"c":"Varios"},{"n":"Kit Zenú 1 indeterminada","p":9800,"c":"Varios"},{"n":"Repuesto de Escoba de Ara 1 unidad","p":4400,"c":"Aseo del Hogar"},{"n":"Palillos Redondos El Sol 180 unidades","p":750,"c":"Aseo del Hogar"},{"n":"Pasta en Letras Doria 250 g","p":1500,"c":"Despensa"},{"n":"Kit Dove 1 indeterminada","p":28950,"c":"Varios"},{"n":"Kit Elvive 400 indeterminada","p":15250,"c":"Varios"},{"n":"Kit Nosotras 1 indeterminada","p":4150,"c":"Varios"}];
+  const tbody = document.getElementById('catalogBody');
+  const searchInput = document.getElementById('search');
+  const categorySelect = document.getElementById('categoryFilter');
+  const sortAscBtn = document.getElementById('sortAsc');
+  const sortDescBtn = document.getElementById('sortDesc');
+  const resultCount = document.getElementById('resultCount');
+
+  let sortDir = null;
+
+  function money(n) {
+    return '$ ' + n.toLocaleString('es-CO');
+  }
+
+  function render() {
+    const q = searchInput.value.trim().toLowerCase();
+    const cat = categorySelect.value;
+    let rows = CATALOG.filter(p => {
+      const matchesQ = !q || p.n.toLowerCase().includes(q);
+      const matchesC = cat === 'Todas' || p.c === cat;
+      return matchesQ && matchesC;
+    });
+    if (sortDir === 'asc') rows = rows.slice().sort((a,b) => a.p - b.p);
+    if (sortDir === 'desc') rows = rows.slice().sort((a,b) => b.p - a.p);
+
+    resultCount.textContent = rows.length + ' de ' + CATALOG.length + ' productos';
+
+    const frag = document.createDocumentFragment();
+    for (const p of rows) {
+      const tr = document.createElement('tr');
+      const tdName = document.createElement('td');
+      tdName.textContent = p.n;
+      const tdCat = document.createElement('td');
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.textContent = p.c;
+      tdCat.appendChild(tag);
+      const tdPrice = document.createElement('td');
+      tdPrice.className = 'price';
+      tdPrice.textContent = money(p.p);
+      tr.appendChild(tdName);
+      tr.appendChild(tdCat);
+      tr.appendChild(tdPrice);
+      frag.appendChild(tr);
+    }
+    tbody.innerHTML = '';
+    tbody.appendChild(frag);
+  }
+
+  searchInput.addEventListener('input', render);
+  categorySelect.addEventListener('change', render);
+  sortAscBtn.addEventListener('click', () => {
+    sortDir = sortDir === 'asc' ? null : 'asc';
+    sortAscBtn.setAttribute('aria-pressed', sortDir === 'asc');
+    sortDescBtn.setAttribute('aria-pressed', 'false');
+    render();
+  });
+  sortDescBtn.addEventListener('click', () => {
+    sortDir = sortDir === 'desc' ? null : 'desc';
+    sortDescBtn.setAttribute('aria-pressed', sortDir === 'desc');
+    sortAscBtn.setAttribute('aria-pressed', 'false');
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>
