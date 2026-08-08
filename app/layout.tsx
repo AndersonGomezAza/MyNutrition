@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import { InstallHint } from "@/components/InstallHint";
+import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,6 +19,18 @@ export const metadata: Metadata = {
   title: "MyNutrition",
   description:
     "Catálogo de supermercado, checklist de compras, plan de comidas y seguimiento de peso.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "MyNutrition",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#059669",
 };
 
 const NAV_LINKS = [
@@ -33,7 +47,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-neutral-50 text-neutral-900">
-        <header className="border-b border-neutral-200 bg-white">
+        <header
+          className="border-b border-neutral-200 bg-white"
+          style={{ paddingTop: "env(safe-area-inset-top)" }}
+        >
           <nav className="mx-auto flex max-w-4xl items-center gap-6 px-4 py-3 text-sm font-medium">
             <Link href="/" className="font-semibold text-emerald-700">
               MyNutrition
@@ -52,6 +69,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6">
           {children}
         </main>
+        <InstallHint />
+        <ServiceWorkerRegistration />
+        <div style={{ paddingBottom: "env(safe-area-inset-bottom)" }} />
       </body>
     </html>
   );
