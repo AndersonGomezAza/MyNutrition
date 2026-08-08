@@ -25,7 +25,33 @@ describe("categorizeProduct food_group", () => {
     // generator's protein picks stay whole-food, not ultra-processed.
     ["Chorizos de Res y Cerdo Ranchera 560 g", "other"],
     ["Jamón de Pollo Bajo en Grasa Pietrán 230 g", "other"],
+    // Found by actually running the generator: these share a keyword with a
+    // real food group but aren't the ingredient it implies.
+    ["Pasta para el Tanque del Sanitario Agente X 52 g", "other"],
+    ["Crema de Pollo A La Mesa 42 g", "other"],
+    ["Papas Fritas de Pollo Margarita 110 g", "other"],
+    ["Papas Fritas Naturales Margarita 300 g", "other"],
+    ["Néctar de Pera California 215 ml", "other"],
+    ["Sopa con Fideos con Sabor a Carne Maruchan 85 g", "other"],
+    ["Pechuga de Pollo Ricachón 2 kg", "protein_poultry"],
+    ["Lomos de Pechuga de Pollo Adobados Bucanero 0.6 kg", "protein_poultry"],
+    ["Mermelada de Mora Glaz 180 g", "other"],
+    ["Salsa de Tomate en Doypack Bassi 400 g", "other"],
+    ["Jalea de Guayaba Bocaricos 414 g", "other"],
+    ["Pastel de Guayaba Las Caseritas 220 g", "other"],
+    ["Colada con Sabor a Fresa Maizena 30 g", "other"],
+    // The structural fix: a snack whose flavor name matches "queso" (dairy)
+    // must not become a dairy pick just because it's cheese-flavored.
+    ["Extruidos de Maíz con Queso Chiksis 240 g", "other"],
+    ["Papas Fritas de Limón Margarita 110 g", "other"],
+    ["Betún de Pasta de Color Rojo Búfalo 36 g", "other"], // shoe polish
   ])("%s -> %s", (name, expected) => {
     expect(categorizeProduct(name).foodGroup).toBe(expected);
+  });
+
+  it("a cheese-flavored corn snack does not get pulled into dairy", () => {
+    const result = categorizeProduct("Extruidos de Maíz con Queso Cheese Tris 93 g");
+    expect(result.category).toBe("Dulces y Pasabocas");
+    expect(result.foodGroup).toBe("other");
   });
 });

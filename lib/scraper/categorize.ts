@@ -27,28 +27,48 @@ const CATEGORY_RULES: Array<[string, string[]]> = [
   ["Bebés", ["pañal", "toallita húmeda", "leche de fórmula", "biberón", "compota", "cereal para bebé", "cereales para bebé", "paño húmedo para bebé", "paños húmedos para bebé", "crema humectante para bebé"]],
   ["Mascotas", ["gato", "perro", "mascota", "arena sanitaria", "concentrado para"]],
   ["Licores", ["cerveza", "ron ", "aguardiente", "whisky", "vino ", "vodka", "tequila"]],
-  ["Aseo del Hogar", ["detergente", "blanqueador", "suavizante", "limpiador", "desinfectante", "lavaplatos", "esponja", "bolsa de basura", "bolsas para basura", "escoba", "trapero", "papel higiénico", "servilleta", "vasos desechables", "platos desechables", "cubiertos desechables", "varsol", "ambientador", "repuesto de escoba", "palillos"]],
-  ["Cuidado Personal", ["shampoo", "champú", "jabón", "crema dental", "desodorante", "cepillo de dientes", "toalla higiénica", "toallas higiénicas", "pañitos", "afeitar", "acondicionador", "protector solar", "crema humectante", "protectores diarios"]],
+  ["Aseo del Hogar", ["detergente", "blanqueador", "suavizante", "limpiador", "desinfectante", "lavaplatos", "esponja", "bolsa de basura", "bolsas para basura", "escoba", "trapero", "papel higiénico", "servilleta", "vasos desechables", "platos desechables", "cubiertos desechables", "varsol", "ambientador", "repuesto de escoba", "palillos", "tanque del sanitario", "sanitario", "betún"]],
+  ["Cuidado Personal", ["shampoo", "champú", "jabón", "crema dental", "desodorante", "cepillo de dientes", "toalla higiénica", "toallas higiénicas", "pañitos", "afeitar", "acondicionador", "protector solar", "crema humectante", "protectores diarios", "agua micelar"]],
   ["Panadería", ["pan ", "pandeyuca", "pandebono", "arepa", "tostada", "ponqué", "torta ", "gofres"]],
-  ["Bebidas", ["gaseosa", "jugo", "néctar", "refresco", "energizante", "agua ", "té ", "malteada", "bebida nutricional", "café", "chocolate de mesa", "bebida achocolatada"]],
+  // Not bare "agua " — "Atún en Lomitos en Agua" (packed in water) isn't a
+  // beverage, and "Agua Micelar" is skincare (see Cuidado Personal above).
+  ["Bebidas", ["gaseosa", "jugo", "néctar", "refresco", "energizante", "agua en botella", "agua con gas", "agua sin gas", "agua saborizada", "agua cristal", "té ", "malteada", "bebida nutricional", "café", "chocolate de mesa", "bebida achocolatada"]],
+  // Checked before Refrigerados/Carnes y Pescados/Despensa on purpose: a
+  // cheese-*flavored* corn snack ("Extruidos de Maíz con Queso") or a
+  // chicken-*flavored* chip otherwise matches those categories' generic
+  // ingredient keywords ("queso", "pollo") first and gets miscategorized as
+  // real dairy/meat instead of a snack.
+  ["Dulces y Pasabocas", ["galleta", "chocolatina", "bombón", "papas fritas", "nachos", "chicle", "gomita", "helado", "mermelada", "dulce", "pasabocas", "brownie", "maní", "chocolate esparcible", "arequipe", "gelatina", "extruidos"]],
   ["Frutas y Verduras", ["manzana", "naranja", "plátano", "papaya", "guayaba", "pera ", "mora", "fresa", "tomate", "cebolla", "espinaca", "lechuga", "pepino", "pimentón", "apio", "aguacate", "zanahoria", "banano", "papa "]],
   ["Carnes y Pescados", ["pollo", "carne de res", "carne de cerdo", "pechuga", "atún", "tilapia", "salmón", "pescado", "chorizo", "salchich", "jamón", "tocineta", "mortadela", "camarones", "camarón", "costilla"]],
   ["Refrigerados", ["leche ", "yogur", "queso", "quesillo", "crema de leche", "mantequilla", "margarina", "huevos"]],
-  ["Dulces y Pasabocas", ["galleta", "chocolatina", "bombón", "papas fritas", "nachos", "chicle", "gomita", "helado", "mermelada", "dulce", "pasabocas", "brownie", "maní", "chocolate esparcible", "arequipe", "gelatina"]],
   ["Despensa", ["arroz", "lenteja", "fríjol", "frijol", "garbanzo", "avena", "azúcar", "panela", "aceite", "harina", "pasta ", "espagueti", "tortillas", "salsa", "sardina", "sal ", "condimento", "caldo", "sopa", "granola", "miel de abejas", "mostaza", "vinagre", "polvo para hornear"]],
 ];
 
 const FOOD_GROUP_RULES: Array<[FoodGroup, string[]]> = [
-  // Must come first: "Jamón de Pollo" contains "pollo" and would otherwise
-  // match protein_poultry below. Deli/processed meats are deliberately kept
-  // out of every protein_* group so the generator's picks stay whole-food.
-  ["other", ["jamón", "tocineta", "mortadela", "salchich", "chorizo"]],
+  // Must come first — these share a keyword with a real food-group rule
+  // below but aren't the ingredient the keyword implies, so a naive
+  // substring match would put toilet-tank tablets in the carb budget and
+  // chicken-*flavored* chips in the protein budget. Found by actually
+  // running the generator and reading its output, not guessed in advance.
+  ["other", [
+    "jamón", "tocineta", "mortadela", "salchich", "chorizo",
+    "tanque del sanitario", "sanitario",
+    "papas fritas", // chips, whatever the flavor suffix — not real potato or meat
+    "crema de pollo", "crema de tomate a la mesa", "crema de champiñones",
+    "caldo de", "sopa de", "sopa con fideos", "consomé",
+    "néctar", "gaseosa", "refresco", "compota", "chupable", "mermelada", "arequipe",
+    "salsa de", "jalea", "pastel de", "colada", "dulce de", "helado",
+    "betún", // shoe polish ("betún de pasta"), not food, despite the "pasta" match
+  ]],
   // Fruit before vegetable: "tomate de árbol" must win over the bare "tomate" rule below.
   ["fruit", ["manzana", "naranja", "plátano", "banano", "papaya", "guayaba", "pera ", "mora", "fresa", "mandarina", "limón", "piña", "durazno", "uva ", "melón", "sandía", "maracuyá", "lulo", "tomate de árbol", "kiwi"]],
   ["vegetable", ["tomate", "cebolla", "espinaca", "lechuga", "pimentón", "apio", "zanahoria", "repollo", "coliflor", "champiñón", "brócoli", "pepino", "calabaza", "calabacín", "habichuela"]],
   ["protein_egg", ["huevo"]],
   ["protein_fish", ["atún", "tilapia", "salmón", "sardina", "pescado", "camarón", "camarones", "trucha", "bagre"]],
-  ["protein_poultry", ["pollo", "pechuga de pollo", "muslo de pollo", "pernil de pollo"]],
+  // Specific cuts, never bare "pollo" — that also matches "sabor a pollo"
+  // snacks and "crema/caldo de pollo" bouillon, neither of which is chicken.
+  ["protein_poultry", ["pechuga de pollo", "pierna de pollo", "muslo de pollo", "pernil de pollo", "contramuslo de pollo", "alitas de pollo", "pollo entero", "presas de pollo", "filete de pollo", "carne de pollo", "trozos de pollo", "lomos de pechuga"]],
   // Deliberately specific ("carne de res", not bare "res"): processed meats like
   // chorizo/jamón/salchicha share substrings with these but are excluded on
   // purpose so the generator's protein picks stay whole-food, not deli meat.
@@ -71,12 +91,30 @@ function matchFirst<T extends string>(
   return fallback;
 }
 
+// Once a product's shelf category lands here, it's processed/non-grocery by
+// definition — never let a flavor word ("con Queso", "sabor a Pollo") pull it
+// into a real food_group. This is a structural backstop for exactly the bug
+// that kept recurring during testing (cheese-*flavored* corn puffs matching
+// "dairy", chicken-*flavored* chips matching "protein_poultry", ...): fixing
+// each ingredient-shaped snack name individually never converges, because
+// snack branding leans on real ingredient names on purpose.
+const NON_FOOD_GROUP_CATEGORIES = new Set([
+  "Dulces y Pasabocas",
+  "Aseo del Hogar",
+  "Cuidado Personal",
+  "Bebidas",
+  "Bebés",
+  "Mascotas",
+  "Licores",
+]);
+
 export function categorizeProduct(name: string): {
   category: string;
   foodGroup: FoodGroup;
 } {
-  return {
-    category: matchFirst(name, CATEGORY_RULES, "Varios"),
-    foodGroup: matchFirst(name, FOOD_GROUP_RULES, "other"),
-  };
+  const category = matchFirst(name, CATEGORY_RULES, "Varios");
+  if (NON_FOOD_GROUP_CATEGORIES.has(category)) {
+    return { category, foodGroup: "other" };
+  }
+  return { category, foodGroup: matchFirst(name, FOOD_GROUP_RULES, "other") };
 }
