@@ -61,6 +61,28 @@ function toSelected(c: Candidate): SelectedItem {
   return { productId: c.id, name: c.name, price_cop: c.price_cop, food_group: c.food_group, qty: 1 };
 }
 
+/**
+ * Randomly upgrades away from `baseline` (assumed affordable) to a pricier
+ * candidate from the same pool, but only ever within `maxExtraBudget` of
+ * baseline's price — the caller already proved baseline fits, so capping
+ * the swap to that budget means the upgrade can't un-prove it.
+ */
+function pickVariedAlternative(
+  candidates: Candidate[],
+  baseline: Candidate,
+  maxExtraBudget: number
+): { item: Candidate; extraCost: number } {
+  // Baseline (price diff 0) always qualifies, so it's always in this pool —
+  // the random pick can land back on it. An earlier version filtered
+  // baseline out of the candidate pool and only randomized among the
+  // *upgrades*, which meant it upgraded 100% of the time whenever any
+  // affordable upgrade existed instead of sometimes staying cheap.
+  const pool = candidates.filter((c) => c.price_cop - baseline.price_cop <= maxExtraBudget);
+  if (pool.length <= 1) return { item: baseline, extraCost: 0 };
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  return { item: pick, extraCost: pick.price_cop - baseline.price_cop };
+}
+
 export type ProteinSelectionResult =
   | { feasible: true; items: SelectedItem[]; warnings: string[] }
   | { feasible: false; warnings: string[]; minimumCost: number };
@@ -109,12 +131,23 @@ export function selectProteins(
     return { feasible: false, warnings, minimumCost };
   }
 
+  // Baseline is the cheapest per subtype (guaranteed to fit — that's what
+  // sumKept() just verified), but buying the literal cheapest chicken brand
+  // every single time makes back-to-back generations (and the 4 weeks of a
+  // monthly plan) look identical. Try to upgrade each kept subtype to a
+  // random pricier alternative from the same subtype, only spending the
+  // *difference* out of the leftover budget — so the swap can never push
+  // the total over budget, it can only eat into the room already proven
+  // to exist.
   const selected = new Map<string, SelectedItem>();
-  for (const st of kept) {
-    const c = cheapestBySubtype.get(st)!;
-    selected.set(c.id, toSelected(c));
-  }
   let remaining = budget - sumKept();
+  for (const st of kept) {
+    const cheapest = cheapestBySubtype.get(st)!;
+    const candidates = byFoodGroup.get(st) ?? [];
+    const upgrade = pickVariedAlternative(candidates, cheapest, remaining);
+    selected.set(upgrade.item.id, toSelected(upgrade.item));
+    remaining -= upgrade.extraCost;
+  }
 
   // Spend any leftover protein budget on more variety/quantity, cheapest
   // affordable item first, across every subtype (not just the ones kept

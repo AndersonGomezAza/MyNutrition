@@ -33,7 +33,7 @@ export function InstallHint() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-app-line bg-app-surface px-4 py-3 text-sm text-app-ink">
       <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
         <p>
           Instala MyNutrition: toca <span className="font-semibold">Compartir</span> (el ícono
@@ -46,7 +46,7 @@ export function InstallHint() {
             localStorage.setItem(DISMISSED_KEY, "1");
             setVisible(false);
           }}
-          className="shrink-0 rounded-md border border-emerald-300 px-2 py-1 text-xs font-medium hover:bg-emerald-100"
+          className="shrink-0 rounded-md border border-app-line px-2 py-1 text-xs font-medium hover:bg-app-surface-2"
         >
           Entendido
         </button>

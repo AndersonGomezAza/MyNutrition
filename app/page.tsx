@@ -28,7 +28,7 @@ export default function HomePage() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-2xl font-semibold">MyNutrition</h1>
-        <p className="mt-1 text-neutral-600">
+        <p className="mt-1 text-app-muted">
           Catálogo, lista de compras y plan de comidas para bajar grasa corporal comiendo rico.
         </p>
       </div>
@@ -37,10 +37,10 @@ export default function HomePage() {
           <Link
             key={card.href}
             href={card.href}
-            className="rounded-lg border border-neutral-200 bg-white p-4 transition hover:border-emerald-300 hover:shadow-sm"
+            className="rounded-lg border border-app-line bg-app-surface p-4 transition hover:border-app-accent-2 hover:shadow-sm"
           >
-            <h2 className="font-semibold text-emerald-700">{card.title}</h2>
-            <p className="mt-1 text-sm text-neutral-600">{card.description}</p>
+            <h2 className="font-semibold text-app-accent-2">{card.title}</h2>
+            <p className="mt-1 text-sm text-app-muted">{card.description}</p>
           </Link>
         ))}
       </div>

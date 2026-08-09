@@ -63,6 +63,36 @@ describe("selectProteins — the 'forgot the beef' regression test", () => {
     }
   });
 
+  it("varies the specific product picked when the budget allows an upgrade", () => {
+    const withTwoEggOptions: Candidate[] = [
+      ...PRODUCTS,
+      { id: "4b", name: "Huevos AAA Grandes 30 unidades", price_cop: 3600, category: "Refrigerados", food_group: "protein_egg" },
+    ];
+    const byFoodGroup = groupByFoodGroup(withTwoEggOptions);
+    const seenEggIds = new Set<string>();
+    for (let i = 0; i < 40; i++) {
+      const result = selectProteins(byFoodGroup, 40000);
+      if (!result.feasible) throw new Error("expected feasible");
+      const egg = result.items.find((it) => it.food_group === "protein_egg");
+      if (egg) seenEggIds.add(egg.productId);
+    }
+    // Regression: the original version always picked the single cheapest
+    // item, so this set would have stayed { "4" } forever.
+    expect(seenEggIds.size).toBeGreaterThan(1);
+  });
+
+  it("never upgrades past what the leftover protein budget can cover", () => {
+    const byFoodGroup = groupByFoodGroup(PRODUCTS);
+    // Budget covers only the 5 cheapest picks exactly, with zero left over.
+    const exact = 8950 + 7500 + 11100 + 3350 + 1900;
+    const result = selectProteins(byFoodGroup, exact);
+    expect(result.feasible).toBe(true);
+    if (result.feasible) {
+      const total = result.items.reduce((s, i) => s + i.price_cop * i.qty, 0);
+      expect(total).toBeLessThanOrEqual(exact);
+    }
+  });
+
   it("returns infeasible with a minimum cost when nothing fits", () => {
     const byFoodGroup = groupByFoodGroup(PRODUCTS);
     const result = selectProteins(byFoodGroup, 500);

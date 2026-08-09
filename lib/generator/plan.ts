@@ -60,3 +60,20 @@ export function generatePlan(
 
   return { feasible: true, items, meals, warnings: proteinResult.warnings, totalCost };
 }
+
+/**
+ * Splits a monthly budget evenly across 4 independent weekly generations.
+ * Each call to generatePlan already randomizes the specific protein pick
+ * (within budget) and shuffles which cheaper-half item wins in the other
+ * food groups, so four calls in a row read as four different weeks rather
+ * than the same shopping list repeated — no separate "week theme" rotation
+ * needed on top of that.
+ */
+export function generateMonthlyPlan(
+  products: Candidate[],
+  monthlyBudgetCop: number,
+  excludedTerms: string[]
+): GeneratedPlan[] {
+  const perWeekBudget = Math.floor(monthlyBudgetCop / 4);
+  return Array.from({ length: 4 }, () => generatePlan(products, perWeekBudget, excludedTerms));
+}

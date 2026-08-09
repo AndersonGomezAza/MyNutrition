@@ -3,15 +3,16 @@
 import { revalidatePath } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/server";
 import { listProducts } from "@/lib/db/products";
-import { generatePlan } from "@/lib/generator/plan";
-import { persistGeneratedPlan } from "@/lib/generator/persist";
+import { deleteBatch as deleteBatchDb } from "@/lib/db/plans";
+import { generateMonthlyPlan, generatePlan, type GeneratedPlan } from "@/lib/generator/plan";
+import { persistGeneratedBatch } from "@/lib/generator/persist";
 import type { Candidate } from "@/lib/generator/selectProducts";
 import type { FoodGroup } from "@/lib/scraper/categorize";
 
 export type PlanActionState =
   | { status: "idle" }
   | { status: "infeasible"; warnings: string[]; minimumBudgetEstimate: number | null }
-  | { status: "success"; listId: string; totalCost: number; warnings: string[] }
+  | { status: "success"; batchId: string; totalCost: number; weekCount: number; warnings: string[] }
   | { status: "error"; message: string };
 
 export async function generatePlanAction(
@@ -19,6 +20,7 @@ export async function generatePlanAction(
   formData: FormData
 ): Promise<PlanActionState> {
   const storeId = String(formData.get("store_id") ?? "");
+  const mode = String(formData.get("mode") ?? "semana") === "mes" ? "mes" : "semana";
   const budgetCop = Number(formData.get("budget_cop"));
   const excludedRaw = String(formData.get("excluded") ?? "");
   const excludedTerms = excludedRaw
@@ -41,21 +43,47 @@ export async function generatePlanAction(
       food_group: p.food_group as FoodGroup,
     }));
 
-    const result = generatePlan(candidates, budgetCop, excludedTerms);
+    const results: GeneratedPlan[] =
+      mode === "mes"
+        ? generateMonthlyPlan(candidates, budgetCop, excludedTerms)
+        : [generatePlan(candidates, budgetCop, excludedTerms)];
 
-    if (!result.feasible) {
+    const firstInfeasible = results.find((r) => !r.feasible) as
+      | Extract<GeneratedPlan, { feasible: false }>
+      | undefined;
+    if (firstInfeasible) {
       return {
         status: "infeasible",
-        warnings: result.warnings,
-        minimumBudgetEstimate: result.minimumBudgetEstimate,
+        warnings: firstInfeasible.warnings,
+        minimumBudgetEstimate:
+          firstInfeasible.minimumBudgetEstimate !== null
+            ? firstInfeasible.minimumBudgetEstimate * results.length
+            : null,
       };
     }
 
-    const listId = await persistGeneratedPlan(supabase, storeId, budgetCop, excludedTerms, result);
+    const feasiblePlans = results as Extract<GeneratedPlan, { feasible: true }>[];
+    const { batchId } = await persistGeneratedBatch(
+      supabase,
+      storeId,
+      budgetCop,
+      excludedTerms,
+      feasiblePlans
+    );
     revalidatePath("/checklist");
     revalidatePath("/plan");
-    return { status: "success", listId, totalCost: result.totalCost, warnings: result.warnings };
+
+    const totalCost = feasiblePlans.reduce((s, p) => s + p.totalCost, 0);
+    const warnings = feasiblePlans.flatMap((p) => p.warnings);
+    return { status: "success", batchId, totalCost, weekCount: feasiblePlans.length, warnings };
   } catch (err) {
     return { status: "error", message: err instanceof Error ? err.message : String(err) };
   }
+}
+
+export async function deleteBatchAction(batchId: string) {
+  const supabase = createServiceClient();
+  await deleteBatchDb(supabase, batchId);
+  revalidatePath("/plan");
+  revalidatePath("/checklist");
 }

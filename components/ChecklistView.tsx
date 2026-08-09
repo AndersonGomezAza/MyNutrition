@@ -5,7 +5,13 @@ import { formatCOP } from "@/lib/utils/money";
 import { removeChecklistItem, toggleChecklistItem } from "@/lib/actions/checklist";
 import type { ChecklistItem } from "@/lib/db/shoppingLists";
 
-export function ChecklistView({ items }: { items: ChecklistItem[] }) {
+export function ChecklistView({
+  items,
+  hideSummary = false,
+}: {
+  items: ChecklistItem[];
+  hideSummary?: boolean;
+}) {
   const [isPending, startTransition] = useTransition();
 
   const total = items.reduce((sum, item) => sum + item.price_cop * item.quantity, 0);
@@ -13,10 +19,12 @@ export function ChecklistView({ items }: { items: ChecklistItem[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-sm text-neutral-500">
-        {checkedCount} de {items.length} marcados · total {formatCOP(total)}
-      </p>
-      <ul className="flex flex-col divide-y divide-neutral-100 rounded-lg border border-neutral-200 bg-white">
+      {!hideSummary && (
+        <p className="text-sm text-app-muted">
+          {checkedCount} de {items.length} marcados · total {formatCOP(total)}
+        </p>
+      )}
+      <ul className="flex flex-col divide-y divide-app-line rounded-lg border border-app-line bg-app-surface">
         {items.map((item) => (
           <li key={item.id} className="flex items-center gap-3 px-4 py-3">
             <input
@@ -28,23 +36,23 @@ export function ChecklistView({ items }: { items: ChecklistItem[] }) {
                   toggleChecklistItem(item.id, e.target.checked);
                 })
               }
-              className="h-5 w-5 accent-emerald-600"
+              className="h-5 w-5 accent-app-accent"
             />
             <div className="flex-1">
-              <p className={item.checked ? "text-neutral-400 line-through" : ""}>
+              <p className={item.checked ? "text-app-muted line-through" : ""}>
                 {item.name}
                 {item.quantity > 1 ? ` ×${item.quantity}` : ""}
               </p>
-              {item.note && <p className="text-xs text-neutral-400">{item.note}</p>}
+              {item.note && <p className="text-xs text-app-muted">{item.note}</p>}
             </div>
-            <span className="tabular-nums text-sm text-neutral-600">
+            <span className="tabular-nums text-sm text-app-muted">
               {formatCOP(item.price_cop * item.quantity)}
             </span>
             <button
               type="button"
               disabled={isPending}
               onClick={() => startTransition(() => removeChecklistItem(item.id))}
-              className="text-xs text-neutral-400 hover:text-red-600"
+              className="text-xs text-app-muted hover:text-red-400"
               aria-label={`Quitar ${item.name}`}
             >
               Quitar

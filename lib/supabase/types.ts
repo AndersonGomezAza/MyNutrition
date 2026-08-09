@@ -277,6 +277,7 @@ export type Database = {
       }
       shopping_lists: {
         Row: {
+          batch_id: string
           budget_cop: number | null
           created_at: string
           excluded_terms: string[]
@@ -286,8 +287,10 @@ export type Database = {
           source: string
           store_id: string
           total_cost_cop: number | null
+          week_number: number
         }
         Insert: {
+          batch_id?: string
           budget_cop?: number | null
           created_at?: string
           excluded_terms?: string[]
@@ -297,8 +300,10 @@ export type Database = {
           source: string
           store_id: string
           total_cost_cop?: number | null
+          week_number?: number
         }
         Update: {
+          batch_id?: string
           budget_cop?: number | null
           created_at?: string
           excluded_terms?: string[]
@@ -308,6 +313,7 @@ export type Database = {
           source?: string
           store_id?: string
           total_cost_cop?: number | null
+          week_number?: number
         }
         Relationships: [
           {

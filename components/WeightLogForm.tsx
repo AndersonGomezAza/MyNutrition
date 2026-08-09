@@ -28,20 +28,20 @@ export function WeightLogForm() {
           }
         })
       }
-      className="flex flex-wrap items-end gap-3 rounded-lg border border-neutral-200 bg-white p-4"
+      className="flex flex-wrap items-end gap-3 rounded-lg border border-app-line bg-app-surface p-4"
     >
       <label className="flex flex-col gap-1 text-sm">
-        <span className="text-xs text-neutral-500">Fecha</span>
+        <span className="text-xs text-app-muted">Fecha</span>
         <input
           type="date"
           name="logged_at"
           defaultValue={todayISO()}
           required
-          className="rounded-md border border-neutral-300 px-2 py-1.5"
+          className="rounded-md border border-app-line bg-app-surface-2 px-2 py-1.5"
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        <span className="text-xs text-neutral-500">Peso (kg)</span>
+        <span className="text-xs text-app-muted">Peso (kg)</span>
         <input
           type="number"
           name="weight_kg"
@@ -49,26 +49,26 @@ export function WeightLogForm() {
           min="1"
           required
           placeholder="70.5"
-          className="w-24 rounded-md border border-neutral-300 px-2 py-1.5"
+          className="w-24 rounded-md border border-app-line bg-app-surface-2 px-2 py-1.5"
         />
       </label>
       <label className="flex flex-1 min-w-[160px] flex-col gap-1 text-sm">
-        <span className="text-xs text-neutral-500">Nota (opcional)</span>
+        <span className="text-xs text-app-muted">Nota (opcional)</span>
         <input
           type="text"
           name="note"
           placeholder="ej. después de entrenar"
-          className="rounded-md border border-neutral-300 px-2 py-1.5"
+          className="rounded-md border border-app-line bg-app-surface-2 px-2 py-1.5 placeholder:text-app-muted"
         />
       </label>
       <button
         type="submit"
         disabled={isPending}
-        className="rounded-md bg-emerald-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+        className="rounded-md bg-app-accent px-4 py-1.5 text-sm font-medium text-app-accent-ink hover:bg-app-accent-2 disabled:opacity-50"
       >
         {isPending ? "Guardando…" : "Guardar"}
       </button>
-      {error && <p className="w-full text-sm text-red-600">{error}</p>}
+      {error && <p className="w-full text-sm text-red-400">{error}</p>}
     </form>
   );
 }

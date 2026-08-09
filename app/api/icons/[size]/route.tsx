@@ -22,7 +22,7 @@ export async function GET(request: Request, { params }: Props) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#059669",
+          background: "#9333ea",
         }}
       >
         <AppIconMark size={markSize} />

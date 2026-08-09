@@ -8,36 +8,17 @@ export type MealPlanDay = {
   meals: { slot: string; title: string; description: string }[];
 };
 
-export type MealPlanResult = {
-  list: {
-    id: string;
-    label: string;
-    budget_cop: number | null;
-    total_cost_cop: number | null;
-    created_at: string;
-  };
-  days: MealPlanDay[];
-} | null;
-
-export async function getMealPlan(
+export async function getMealPlanDays(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: SupabaseClient<any>,
   listId: string
-): Promise<MealPlanResult> {
-  const { data: list, error: listError } = await supabase
-    .from("shopping_lists")
-    .select("id, label, budget_cop, total_cost_cop, created_at")
-    .eq("id", listId)
-    .maybeSingle();
-  if (listError) throw listError;
-  if (!list) return null;
-
-  const { data: rows, error: daysError } = await supabase
+): Promise<MealPlanDay[]> {
+  const { data: rows, error } = await supabase
     .from("meal_plan_days")
     .select("day_number, meal_slot, title, description")
     .eq("shopping_list_id", listId)
     .order("day_number");
-  if (daysError) throw daysError;
+  if (error) throw error;
 
   const byDay = new Map<number, MealPlanDay>();
   for (const row of rows ?? []) {
@@ -46,7 +27,7 @@ export async function getMealPlan(
     byDay.set(row.day_number, day);
   }
 
-  const days = [...byDay.values()]
+  return [...byDay.values()]
     .sort((a, b) => a.dayNumber - b.dayNumber)
     .map((d) => ({
       ...d,
@@ -54,6 +35,4 @@ export async function getMealPlan(
         (a, b) => SLOT_ORDER.indexOf(a.slot as never) - SLOT_ORDER.indexOf(b.slot as never)
       ),
     }));
-
-  return { list, days };
 }

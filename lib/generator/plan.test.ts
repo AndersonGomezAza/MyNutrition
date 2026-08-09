@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { generatePlan } from "./plan";
+import { generateMonthlyPlan, generatePlan } from "./plan";
 import type { Candidate } from "./selectProducts";
 
 // A slice representative of the real Ara catalog (same items used in the
@@ -80,5 +80,26 @@ describe("generatePlan reports infeasibility honestly", () => {
     if (!result.feasible) {
       expect(result.minimumBudgetEstimate).toBeGreaterThan(500);
     }
+  });
+});
+
+describe("generateMonthlyPlan", () => {
+  it("produces 4 feasible weeks, each within budget/4", () => {
+    const weeks = generateMonthlyPlan(PRODUCTS, 400000, []);
+    expect(weeks).toHaveLength(4);
+    for (const week of weeks) {
+      expect(week.feasible).toBe(true);
+      if (week.feasible) {
+        expect(week.totalCost).toBeLessThanOrEqual(100000);
+      }
+    }
+  });
+
+  it("the 4 weeks aren't just the same list copy-pasted", () => {
+    const weeks = generateMonthlyPlan(PRODUCTS, 400000, []);
+    const signatures = weeks.map((w) =>
+      w.feasible ? w.items.map((i) => `${i.productId}x${i.qty}`).sort().join(",") : ""
+    );
+    expect(new Set(signatures).size).toBeGreaterThan(1);
   });
 });

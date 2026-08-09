@@ -39,7 +39,7 @@ function AddButton({ storeId, productId }: { storeId: string; productId: string 
           setTimeout(() => setAdded(false), 1500);
         })
       }
-      className="rounded-md border border-neutral-300 px-2 py-1 text-xs font-medium text-neutral-700 hover:border-emerald-400 hover:text-emerald-700 disabled:opacity-50"
+      className="rounded-md border border-app-line px-2 py-1 text-xs font-medium text-app-muted hover:border-app-accent-2 hover:text-app-accent-2 disabled:opacity-50"
     >
       {added ? "Agregado ✓" : "Agregar"}
     </button>
@@ -80,12 +80,12 @@ export function CatalogTable({
           placeholder="Buscar producto, ej. leche, pollo, avena…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 min-w-[220px] rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="flex-1 min-w-[220px] rounded-md border border-app-line bg-app-surface px-3 py-2 text-sm placeholder:text-app-muted"
         />
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="rounded-md border border-app-line bg-app-surface px-3 py-2 text-sm"
         >
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>
@@ -98,8 +98,8 @@ export function CatalogTable({
           onClick={() => setSortDir((d) => (d === "asc" ? null : "asc"))}
           className={`rounded-md border px-3 py-2 text-sm font-medium ${
             sortDir === "asc"
-              ? "border-emerald-600 bg-emerald-600 text-white"
-              : "border-neutral-300"
+              ? "border-app-accent bg-app-accent text-app-accent-ink"
+              : "border-app-line"
           }`}
         >
           Precio ↑
@@ -109,19 +109,19 @@ export function CatalogTable({
           onClick={() => setSortDir((d) => (d === "desc" ? null : "desc"))}
           className={`rounded-md border px-3 py-2 text-sm font-medium ${
             sortDir === "desc"
-              ? "border-emerald-600 bg-emerald-600 text-white"
-              : "border-neutral-300"
+              ? "border-app-accent bg-app-accent text-app-accent-ink"
+              : "border-app-line"
           }`}
         >
           Precio ↓
         </button>
       </div>
-      <p className="text-xs text-neutral-500">
+      <p className="text-xs text-app-muted">
         {filtered.length} de {products.length} productos
       </p>
-      <div className="max-h-[560px] overflow-auto rounded-lg border border-neutral-200 bg-white">
+      <div className="max-h-[560px] overflow-auto rounded-lg border border-app-line bg-app-surface">
         <table className="w-full text-sm">
-          <thead className="sticky top-0 bg-neutral-50 text-left text-xs uppercase text-neutral-500">
+          <thead className="sticky top-0 bg-app-surface-2 text-left text-xs uppercase text-app-muted">
             <tr>
               <th className="px-3 py-2">Producto</th>
               <th className="px-3 py-2">Categoría</th>
@@ -131,10 +131,10 @@ export function CatalogTable({
           </thead>
           <tbody>
             {filtered.map((p) => (
-              <tr key={p.id} className="border-t border-neutral-100">
+              <tr key={p.id} className="border-t border-app-line">
                 <td className="px-3 py-2">{p.name}</td>
                 <td className="px-3 py-2">
-                  <span className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-xs text-neutral-600">
+                  <span className="rounded-full border border-app-line bg-app-surface-2 px-2 py-0.5 text-xs text-app-muted">
                     {p.category}
                   </span>
                 </td>

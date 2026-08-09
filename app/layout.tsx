@@ -30,7 +30,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#059669",
+  themeColor: "#130f1f",
 };
 
 const NAV_LINKS = [
@@ -46,20 +46,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-neutral-50 text-neutral-900">
+      <body className="min-h-full flex flex-col bg-app-bg text-app-ink">
         <header
-          className="border-b border-neutral-200 bg-white"
+          className="border-b border-app-line bg-app-surface"
           style={{ paddingTop: "env(safe-area-inset-top)" }}
         >
           <nav className="mx-auto flex max-w-4xl items-center gap-6 px-4 py-3 text-sm font-medium">
-            <Link href="/" className="font-semibold text-emerald-700">
+            <Link href="/" className="font-semibold text-app-accent-2">
               MyNutrition
             </Link>
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-neutral-600 hover:text-neutral-900"
+                className="text-app-muted hover:text-app-ink"
               >
                 {link.label}
               </Link>

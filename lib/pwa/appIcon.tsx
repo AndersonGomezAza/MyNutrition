@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 
-const ACCENT = "#059669"; // emerald-600 — same accent used across the app
+const ACCENT = "#9333ea"; // matches --color-app-accent in app/globals.css
 
 /**
  * Shared visual for every icon surface (favicon, apple-touch-icon, manifest

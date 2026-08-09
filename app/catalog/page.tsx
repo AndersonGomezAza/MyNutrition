@@ -49,8 +49,8 @@ export default async function CatalogPage({ searchParams }: Props) {
               href={`/catalog?store=${s.slug}`}
               className={`rounded-md border px-3 py-1.5 text-sm font-medium ${
                 s.id === activeStore.id
-                  ? "border-emerald-600 bg-emerald-600 text-white"
-                  : "border-neutral-300 text-neutral-700"
+                  ? "border-app-accent bg-app-accent text-app-accent-ink"
+                  : "border-app-line text-app-muted"
               }`}
             >
               {s.display_name}

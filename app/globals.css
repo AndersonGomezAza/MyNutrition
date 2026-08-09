@@ -4,3 +4,22 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+
+/*
+ * Dark purple, single committed theme (not a light/dark toggle — the user
+ * asked for the app to just be dark purple). Kept as real CSS variables
+ * (not @theme inline) so lib/pwa/appIcon.tsx and WeightChart's inline SVG
+ * styles can read the same values via var(--color-app-accent) instead of
+ * duplicating hex codes.
+ */
+@theme {
+  --color-app-bg: #130f1f;
+  --color-app-surface: #1c1730;
+  --color-app-surface-2: #241d3d;
+  --color-app-line: #362b52;
+  --color-app-ink: #f1edf9;
+  --color-app-muted: #a99bcf;
+  --color-app-accent: #9333ea;
+  --color-app-accent-2: #a855f7;
+  --color-app-accent-ink: #ffffff;
+}

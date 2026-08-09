@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { removeWeightLog } from "@/lib/actions/weight";
 import type { WeightLogRow } from "@/lib/db/weightLogs";
 
-const ACCENT = "#059669"; // emerald-600, matches the app's accent everywhere else
+const ACCENT = "#9333ea"; // matches --color-app-accent in globals.css
 const WIDTH = 640;
 const HEIGHT = 260;
 const PAD = { top: 20, right: 24, bottom: 28, left: 40 };
@@ -62,7 +62,7 @@ export function WeightChart({ logs }: { logs: WeightLogRow[] }) {
 
   if (logs.length === 0) {
     return (
-      <p className="rounded-lg border border-dashed border-neutral-300 bg-white p-4 text-sm text-neutral-500">
+      <p className="rounded-lg border border-dashed border-app-line bg-app-surface p-4 text-sm text-app-muted">
         Todavía no has registrado ningún peso.
       </p>
     );
@@ -75,9 +75,9 @@ export function WeightChart({ logs }: { logs: WeightLogRow[] }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-app-muted">
           {logs.length} registro{logs.length !== 1 ? "s" : ""} ·{" "}
-          <span className={delta <= 0 ? "text-emerald-700" : "text-amber-700"}>
+          <span className={delta <= 0 ? "text-emerald-400" : "text-amber-400"}>
             {delta > 0 ? "+" : ""}
             {delta.toFixed(1)} kg desde el primer registro
           </span>
@@ -85,16 +85,16 @@ export function WeightChart({ logs }: { logs: WeightLogRow[] }) {
         <button
           type="button"
           onClick={() => setShowTable((v) => !v)}
-          className="text-xs font-medium text-neutral-500 underline hover:text-neutral-800"
+          className="text-xs font-medium text-app-muted underline hover:text-app-ink"
         >
           {showTable ? "Ver gráfica" : "Ver como tabla"}
         </button>
       </div>
 
       {showTable || !chart ? (
-        <div className="overflow-auto rounded-lg border border-neutral-200 bg-white">
+        <div className="overflow-auto rounded-lg border border-app-line bg-app-surface">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-50 text-left text-xs uppercase text-neutral-500">
+            <thead className="bg-app-surface-2 text-left text-xs uppercase text-app-muted">
               <tr>
                 <th className="px-3 py-2">Fecha</th>
                 <th className="px-3 py-2 text-right">Peso (kg)</th>
@@ -104,15 +104,15 @@ export function WeightChart({ logs }: { logs: WeightLogRow[] }) {
             </thead>
             <tbody>
               {[...logs].reverse().map((l) => (
-                <tr key={l.id} className="border-t border-neutral-100">
+                <tr key={l.id} className="border-t border-app-line">
                   <td className="px-3 py-2">{formatShortDate(l.logged_at)}</td>
                   <td className="px-3 py-2 text-right tabular-nums">{l.weight_kg.toFixed(1)}</td>
-                  <td className="px-3 py-2 text-neutral-500">{l.note}</td>
+                  <td className="px-3 py-2 text-app-muted">{l.note}</td>
                   <td className="px-3 py-2 text-right">
                     <button
                       type="button"
                       onClick={() => removeWeightLog(l.id)}
-                      className="text-xs text-neutral-400 hover:text-red-600"
+                      className="text-xs text-app-muted hover:text-red-400"
                     >
                       Quitar
                     </button>
@@ -123,7 +123,7 @@ export function WeightChart({ logs }: { logs: WeightLogRow[] }) {
           </table>
         </div>
       ) : (
-        <div className="relative rounded-lg border border-neutral-200 bg-white p-2">
+        <div className="relative rounded-lg border border-app-line bg-app-surface p-2">
           <svg
             viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
             className="w-full"
@@ -138,10 +138,10 @@ export function WeightChart({ logs }: { logs: WeightLogRow[] }) {
                   x2={WIDTH - PAD.right}
                   y1={g.y}
                   y2={g.y}
-                  stroke="#e5e7eb"
+                  className="stroke-app-line"
                   strokeWidth={1}
                 />
-                <text x={PAD.left - 8} y={g.y + 3} textAnchor="end" className="fill-neutral-400 text-[9px]">
+                <text x={PAD.left - 8} y={g.y + 3} textAnchor="end" className="fill-app-muted text-[9px]">
                   {g.value.toFixed(0)}
                 </text>
               </g>
@@ -164,7 +164,7 @@ export function WeightChart({ logs }: { logs: WeightLogRow[] }) {
                 cy={p.y}
                 r={i === chart.points.length - 1 ? 5 : 3}
                 fill={ACCENT}
-                stroke="white"
+                className="stroke-app-surface"
                 strokeWidth={2}
               />
             ))}
@@ -188,7 +188,7 @@ export function WeightChart({ logs }: { logs: WeightLogRow[] }) {
                 x2={chart.points[hoverIndex].x}
                 y1={PAD.top}
                 y2={HEIGHT - PAD.bottom}
-                stroke="#9ca3af"
+                className="stroke-app-muted"
                 strokeWidth={1}
               />
             )}
@@ -197,7 +197,7 @@ export function WeightChart({ logs }: { logs: WeightLogRow[] }) {
               x={chart.points[chart.points.length - 1].x}
               y={chart.points[chart.points.length - 1].y - 10}
               textAnchor="end"
-              className="fill-neutral-700 text-[11px] font-semibold"
+              className="fill-app-ink text-[11px] font-semibold"
             >
               {last.toFixed(1)} kg
             </text>
@@ -205,7 +205,7 @@ export function WeightChart({ logs }: { logs: WeightLogRow[] }) {
 
           {hoverIndex !== null && (
             <div
-              className="pointer-events-none absolute rounded-md border border-neutral-200 bg-white px-2 py-1 text-xs shadow-md"
+              className="pointer-events-none absolute rounded-md border border-app-line bg-app-surface px-2 py-1 text-xs shadow-md"
               style={{
                 left: `${(chart.points[hoverIndex].x / WIDTH) * 100}%`,
                 top: 4,
@@ -215,7 +215,7 @@ export function WeightChart({ logs }: { logs: WeightLogRow[] }) {
               <span className="font-semibold tabular-nums">
                 {logs[hoverIndex].weight_kg.toFixed(1)} kg
               </span>{" "}
-              <span className="text-neutral-500">{formatShortDate(logs[hoverIndex].logged_at)}</span>
+              <span className="text-app-muted">{formatShortDate(logs[hoverIndex].logged_at)}</span>
             </div>
           )}
         </div>
