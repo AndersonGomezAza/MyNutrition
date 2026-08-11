@@ -114,6 +114,9 @@ export function PlanHistory({ batches }: { batches: Batch[] }) {
           <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 marker:content-none">
             <span className="flex items-center gap-2 font-semibold">
               {batch.weeks.length > 1 ? "Plan mensual" : "Plan semanal"} — {batch.storeName}
+              <span className="rounded-full bg-app-surface-2 px-2 py-0.5 text-[10px] font-semibold text-app-muted">
+                {batch.people} {batch.people === 1 ? "persona" : "personas"}
+              </span>
               {batch.isActive && (
                 <span className="rounded-full bg-app-accent/20 px-2 py-0.5 text-[10px] font-semibold text-app-accent-2">
                   ACTIVO

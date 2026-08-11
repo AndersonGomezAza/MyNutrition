@@ -15,12 +15,19 @@ export function PlanGeneratorForm({
 }) {
   const [state, formAction, isPending] = useActionState(generatePlanAction, initialState);
   const [mode, setMode] = useState<"semana" | "mes">("semana");
+  const [people, setPeople] = useState(1);
   const [budget, setBudget] = useState(DEFAULT_BUDGET.semana);
   const [budgetTouched, setBudgetTouched] = useState(false);
 
   function handleModeChange(next: "semana" | "mes") {
     setMode(next);
-    if (!budgetTouched) setBudget(DEFAULT_BUDGET[next]);
+    if (!budgetTouched) setBudget(DEFAULT_BUDGET[next] * people);
+  }
+
+  function handlePeopleChange(next: number) {
+    const clamped = Math.max(1, Math.floor(next) || 1);
+    if (!budgetTouched) setBudget(DEFAULT_BUDGET[mode] * clamped);
+    setPeople(clamped);
   }
 
   return (
@@ -78,7 +85,26 @@ export function PlanGeneratorForm({
               className="w-36 rounded-md border border-app-line bg-app-surface-2 px-2 py-1.5"
             />
           </label>
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-xs text-app-muted">Personas</span>
+            <input
+              type="number"
+              name="people"
+              min="1"
+              step="1"
+              value={people}
+              onChange={(e) => handlePeopleChange(Number(e.target.value))}
+              required
+              className="w-20 rounded-md border border-app-line bg-app-surface-2 px-2 py-1.5"
+            />
+          </label>
         </div>
+        <p className="text-xs text-app-muted">
+          Las porciones de cada comida se calculan a partir de lo que realmente compras esta
+          {mode === "semana" ? " semana" : " cada semana del mes"}, repartido entre estas personas —
+          si el presupuesto queda corto para el número de personas, vas a ver porciones más
+          chiquitas en vez de un plan que no concuerde con lo comprado.
+        </p>
         <label className="flex flex-col gap-1 text-sm">
           <span className="text-xs text-app-muted">
             No incluir (separado por comas), ej: pepino, brócoli, calabaza

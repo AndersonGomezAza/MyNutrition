@@ -284,6 +284,7 @@ export type Database = {
           id: string
           is_active: boolean
           label: string
+          people: number
           source: string
           store_id: string
           total_cost_cop: number | null
@@ -297,6 +298,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           label: string
+          people?: number
           source: string
           store_id: string
           total_cost_cop?: number | null
@@ -310,6 +312,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           label?: string
+          people?: number
           source?: string
           store_id?: string
           total_cost_cop?: number | null

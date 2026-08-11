@@ -14,6 +14,7 @@ export type Candidate = {
   price_cop: number;
   category: string;
   food_group: FoodGroup;
+  presentation?: string | null;
 };
 
 export type SelectedItem = {
@@ -22,6 +23,7 @@ export type SelectedItem = {
   price_cop: number;
   food_group: FoodGroup;
   qty: number;
+  presentation?: string | null;
 };
 
 const PROTEIN_LABELS: Record<string, string> = {
@@ -58,7 +60,14 @@ export function groupByFoodGroup(pool: Candidate[]): Map<FoodGroup, Candidate[]>
 }
 
 function toSelected(c: Candidate): SelectedItem {
-  return { productId: c.id, name: c.name, price_cop: c.price_cop, food_group: c.food_group, qty: 1 };
+  return {
+    productId: c.id,
+    name: c.name,
+    price_cop: c.price_cop,
+    food_group: c.food_group,
+    qty: 1,
+    presentation: c.presentation ?? null,
+  };
 }
 
 /**

@@ -22,6 +22,7 @@ export async function generatePlanAction(
   const storeId = String(formData.get("store_id") ?? "");
   const mode = String(formData.get("mode") ?? "semana") === "mes" ? "mes" : "semana";
   const budgetCop = Number(formData.get("budget_cop"));
+  const people = Math.max(1, Math.floor(Number(formData.get("people")) || 1));
   const excludedRaw = String(formData.get("excluded") ?? "");
   const excludedTerms = excludedRaw
     .split(",")
@@ -41,12 +42,13 @@ export async function generatePlanAction(
       price_cop: p.price_cop,
       category: p.category,
       food_group: p.food_group as FoodGroup,
+      presentation: p.presentation,
     }));
 
     const results: GeneratedPlan[] =
       mode === "mes"
-        ? generateMonthlyPlan(candidates, budgetCop, excludedTerms)
-        : [generatePlan(candidates, budgetCop, excludedTerms)];
+        ? generateMonthlyPlan(candidates, budgetCop, excludedTerms, people)
+        : [generatePlan(candidates, budgetCop, excludedTerms, people)];
 
     const firstInfeasible = results.find((r) => !r.feasible) as
       | Extract<GeneratedPlan, { feasible: false }>
@@ -68,7 +70,8 @@ export async function generatePlanAction(
       storeId,
       budgetCop,
       excludedTerms,
-      feasiblePlans
+      feasiblePlans,
+      people
     );
     revalidatePath("/checklist");
     revalidatePath("/plan");

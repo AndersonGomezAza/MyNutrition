@@ -37,7 +37,8 @@ function estimateMinimumBudget(byFoodGroup: Map<string, Candidate[]>): number | 
 export function generatePlan(
   products: Candidate[],
   budgetCop: number,
-  excludedTerms: string[]
+  excludedTerms: string[],
+  people: number = 1
 ): GeneratedPlan {
   const pool = buildCandidatePool(products, excludedTerms);
   const byFoodGroup = groupByFoodGroup(pool);
@@ -56,7 +57,7 @@ export function generatePlan(
   const simpleItems = selectAllSimpleGroups(byFoodGroup, budgetCop);
   const items = [...proteinResult.items, ...simpleItems];
   const totalCost = items.reduce((sum, i) => sum + i.price_cop * i.qty, 0);
-  const meals = buildWeekPlan(items);
+  const meals = buildWeekPlan(items, people);
 
   return { feasible: true, items, meals, warnings: proteinResult.warnings, totalCost };
 }
@@ -72,8 +73,9 @@ export function generatePlan(
 export function generateMonthlyPlan(
   products: Candidate[],
   monthlyBudgetCop: number,
-  excludedTerms: string[]
+  excludedTerms: string[],
+  people: number = 1
 ): GeneratedPlan[] {
   const perWeekBudget = Math.floor(monthlyBudgetCop / 4);
-  return Array.from({ length: 4 }, () => generatePlan(products, perWeekBudget, excludedTerms));
+  return Array.from({ length: 4 }, () => generatePlan(products, perWeekBudget, excludedTerms, people));
 }

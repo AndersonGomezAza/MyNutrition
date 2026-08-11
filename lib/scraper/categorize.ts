@@ -45,7 +45,10 @@ const CATEGORY_RULES: Array<[string, string[]]> = [
   ["Despensa", ["arroz", "lenteja", "fríjol", "frijol", "garbanzo", "avena", "azúcar", "panela", "aceite", "harina", "pasta ", "espagueti", "tortillas", "salsa", "sardina", "sal ", "condimento", "caldo", "sopa", "granola", "miel de abejas", "mostaza", "vinagre", "polvo para hornear"]],
 ];
 
-const FOOD_GROUP_RULES: Array<[FoodGroup, string[]]> = [
+// Exported for reuse by the meal-plan generator (lib/generator/ingredientLabels.ts),
+// which needs the same keyword-to-ingredient mapping to derive a clean display
+// label (e.g. "pollo") from a product name without repeating this list.
+export const FOOD_GROUP_RULES: Array<[FoodGroup, string[]]> = [
   // Must come first — these share a keyword with a real food-group rule
   // below but aren't the ingredient the keyword implies, so a naive
   // substring match would put toilet-tank tablets in the carb budget and

@@ -1,4 +1,6 @@
+import { extractIngredientLabel } from "./ingredientLabels";
 import type { SelectedItem } from "./selectProducts";
+import { parsePresentation, formatPortion } from "./units";
 
 export type MealSlot = "desayuno" | "almuerzo" | "merienda" | "cena";
 
@@ -8,6 +10,16 @@ export type PlannedMeal = {
   title: string;
   description: string;
   productIds: string[];
+};
+
+type Role = "main" | "sauteed" | "side" | "with" | "and" | "protein" | "salad";
+type Usage = { item: SelectedItem; role: Role };
+type MealDraft = {
+  dayNumber: number;
+  slot: MealSlot;
+  title: string;
+  usages: Usage[];
+  cookStyle?: string;
 };
 
 function byGroup(items: SelectedItem[], group: string) {
@@ -20,104 +32,179 @@ function pick<T>(arr: T[], index: number): T | undefined {
 
 const COOK_STYLES = ["a la plancha", "al horno", "guisado/a", "salteado/a"];
 
+function usage(item: SelectedItem | undefined, role: Role): Usage[] {
+  return item ? [{ item, role }] : [];
+}
+
+function findUsage(usages: Usage[], role: Role): Usage | undefined {
+  return usages.find((u) => u.role === role);
+}
+
 /**
- * Builds a 7-day plan from ONLY the items the budget allocator already
- * selected — the shopping list and the meal descriptions can never
- * disagree, because there is no separate ingredient source for either.
+ * Builds the week's meal *structure* — which specific purchased item fills
+ * each slot — using exactly the same rotation/fallback rules the old
+ * text-building version used. Kept separate from text rendering because the
+ * portion shown for a given item can only be computed once we know how many
+ * times, across the *whole* week, that item gets used.
  */
-export function buildWeekPlan(items: SelectedItem[]): PlannedMeal[] {
+function buildWeekDrafts(items: SelectedItem[]): MealDraft[] {
   const proteins = items.filter((i) => i.food_group.startsWith("protein_"));
   const carbs = byGroup(items, "carb");
   const dairy = byGroup(items, "dairy");
   const fruits = byGroup(items, "fruit");
   const vegetables = byGroup(items, "vegetable");
 
-  const meals: PlannedMeal[] = [];
+  const drafts: MealDraft[] = [];
 
   for (let day = 1; day <= 7; day++) {
     const dayIndex = day - 1;
 
-    // Desayuno: rotate between egg-based and dairy+carb+fruit style.
     const egg = proteins.find((p) => p.food_group === "protein_egg");
     if (egg && dayIndex % 2 === 0) {
       const carb = pick(carbs, dayIndex);
       const veg = pick(vegetables, dayIndex);
-      meals.push({
+      drafts.push({
         dayNumber: day,
         slot: "desayuno",
         title: "Huevos",
-        description: [
-          egg.name,
-          veg ? `con ${veg.name.toLowerCase()} salteado` : "",
-          carb ? `y ${carb.name.toLowerCase()}` : "",
-        ]
-          .filter(Boolean)
-          .join(" "),
-        productIds: [egg.productId, veg?.productId, carb?.productId].filter(Boolean) as string[],
+        usages: [...usage(egg, "main"), ...usage(veg, "sauteed"), ...usage(carb, "side")],
       });
     } else {
       const carb = pick(carbs, dayIndex);
       const dairyItem = pick(dairy, dayIndex);
       const fruit = pick(fruits, dayIndex);
-      meals.push({
+      drafts.push({
         dayNumber: day,
         slot: "desayuno",
         title: "Desayuno",
-        description: [carb?.name, dairyItem ? `con ${dairyItem.name.toLowerCase()}` : "", fruit ? `y ${fruit.name.toLowerCase()}` : ""]
-          .filter(Boolean)
-          .join(" ") || "Fruta y lácteo",
-        productIds: [carb?.productId, dairyItem?.productId, fruit?.productId].filter(Boolean) as string[],
+        usages: [...usage(carb, "main"), ...usage(dairyItem, "with"), ...usage(fruit, "and")],
       });
     }
 
-    // Merienda: fruit, or dairy if no fruit left.
     const merienda = pick(fruits, dayIndex) ?? pick(dairy, dayIndex);
-    meals.push({
+    drafts.push({
       dayNumber: day,
       slot: "merienda",
       title: "Merienda",
-      description: merienda ? merienda.name : "Fruta de temporada",
-      productIds: merienda ? [merienda.productId] : [],
+      usages: usage(merienda, "main"),
     });
 
-    // Almuerzo: main protein of the day + carb + vegetable.
     const lunchProtein = pick(proteins, dayIndex);
     const lunchCarb = pick(carbs, dayIndex + 1);
     const lunchVeg = pick(vegetables, dayIndex);
-    const cookStyle = pick(COOK_STYLES, dayIndex);
-    meals.push({
+    drafts.push({
       dayNumber: day,
       slot: "almuerzo",
       title: "Almuerzo",
-      description: [
-        lunchProtein ? `${lunchProtein.name} ${cookStyle}` : "Plato principal",
-        lunchCarb?.name,
-        lunchVeg ? `y ensalada de ${lunchVeg.name.toLowerCase()}` : "",
-      ]
-        .filter(Boolean)
-        .join(", "),
-      productIds: [lunchProtein?.productId, lunchCarb?.productId, lunchVeg?.productId].filter(
-        Boolean
-      ) as string[],
+      cookStyle: pick(COOK_STYLES, dayIndex),
+      usages: [
+        ...usage(lunchProtein, "protein"),
+        ...usage(lunchCarb, "side"),
+        ...usage(lunchVeg, "salad"),
+      ],
     });
 
-    // Cena: a different protein than lunch when there's more than one option.
-    const dinnerProtein =
-      proteins.length > 1 ? pick(proteins, dayIndex + 1) : lunchProtein;
+    const dinnerProtein = proteins.length > 1 ? pick(proteins, dayIndex + 1) : lunchProtein;
     const dinnerVeg = pick(vegetables, dayIndex + 1);
-    meals.push({
+    drafts.push({
       dayNumber: day,
       slot: "cena",
       title: "Cena",
-      description: [
-        dinnerProtein ? dinnerProtein.name : "Plato ligero",
-        dinnerVeg ? `con ensalada de ${dinnerVeg.name.toLowerCase()}` : "",
-      ]
-        .filter(Boolean)
-        .join(" "),
-      productIds: [dinnerProtein?.productId, dinnerVeg?.productId].filter(Boolean) as string[],
+      usages: [...usage(dinnerProtein, "protein"), ...usage(dinnerVeg, "salad")],
     });
   }
 
-  return meals;
+  return drafts;
+}
+
+/**
+ * Builds a 7-day plan from ONLY the items the budget allocator already
+ * selected — the shopping list and the meal descriptions can never disagree
+ * about *which* products are used, because there is no separate ingredient
+ * source for either.
+ *
+ * The *portion* shown per meal is derived the same way: for every product,
+ * (package size x quantity bought) / (times it's used across the week) /
+ * people gives the per-person amount for a single use — so if you follow
+ * every printed portion exactly, across the whole week, for `people` people,
+ * you use exactly what's in the shopping list, no more and no less (up to
+ * the rounding formatPortion applies for a readable number). Ingredient
+ * names (not brand names) come from the same keyword lists that classified
+ * the product's food group, so nothing here can name a food that isn't a
+ * "match" for that food group either.
+ */
+export function buildWeekPlan(items: SelectedItem[], people: number = 1): PlannedMeal[] {
+  const safePeople = Math.max(1, people);
+  const drafts = buildWeekDrafts(items);
+
+  const usageCounts = new Map<string, number>();
+  for (const d of drafts) {
+    for (const u of d.usages) {
+      usageCounts.set(u.item.productId, (usageCounts.get(u.item.productId) ?? 0) + 1);
+    }
+  }
+
+  function portionText(item: SelectedItem): string {
+    const label = extractIngredientLabel(item.name, item.food_group);
+    const parsed = parsePresentation(item.presentation);
+    if (!parsed) return label;
+    const uses = usageCounts.get(item.productId) ?? 1;
+    const perUsePerPerson = (parsed.value * item.qty) / uses / safePeople;
+    return `${formatPortion(perUsePerPerson, parsed.unit)} de ${label}`;
+  }
+
+  return drafts.map((d) => {
+    const productIds = d.usages.map((u) => u.item.productId);
+    let description: string;
+
+    if (d.slot === "almuerzo") {
+      const proteinU = findUsage(d.usages, "protein");
+      const sideU = findUsage(d.usages, "side");
+      const saladU = findUsage(d.usages, "salad");
+      description = [
+        proteinU ? `${portionText(proteinU.item)} ${d.cookStyle}` : "Plato principal",
+        sideU ? portionText(sideU.item) : "",
+        saladU ? `y ensalada de ${portionText(saladU.item)}` : "",
+      ]
+        .filter(Boolean)
+        .join(", ");
+    } else if (d.slot === "cena") {
+      const proteinU = findUsage(d.usages, "protein");
+      const saladU = findUsage(d.usages, "salad");
+      description = [
+        proteinU ? portionText(proteinU.item) : "Plato ligero",
+        saladU ? `con ensalada de ${portionText(saladU.item)}` : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+    } else if (d.slot === "merienda") {
+      const mainU = findUsage(d.usages, "main");
+      description = mainU ? portionText(mainU.item) : "Fruta de temporada";
+    } else if (d.title === "Huevos") {
+      const mainU = findUsage(d.usages, "main");
+      const sauteedU = findUsage(d.usages, "sauteed");
+      const sideU = findUsage(d.usages, "side");
+      description = [
+        mainU ? portionText(mainU.item) : "",
+        sauteedU ? `con ${portionText(sauteedU.item)} salteado` : "",
+        sideU ? `y ${portionText(sideU.item)}` : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+    } else {
+      const mainU = findUsage(d.usages, "main");
+      const withU = findUsage(d.usages, "with");
+      const andU = findUsage(d.usages, "and");
+      description =
+        [
+          mainU ? portionText(mainU.item) : "",
+          withU ? `con ${portionText(withU.item)}` : "",
+          andU ? `y ${portionText(andU.item)}` : "",
+        ]
+          .filter(Boolean)
+          .join(" ") || "Fruta y lácteo";
+    }
+
+    return { dayNumber: d.dayNumber, slot: d.slot, title: d.title, description, productIds };
+  });
 }

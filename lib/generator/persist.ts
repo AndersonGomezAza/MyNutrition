@@ -17,7 +17,8 @@ export async function persistGeneratedBatch(
   storeId: string,
   totalBudgetCop: number,
   excludedTerms: string[],
-  weeklyPlans: FeasiblePlan[]
+  weeklyPlans: FeasiblePlan[],
+  people: number = 1
 ): Promise<{ batchId: string; listIds: string[] }> {
   const batchId = crypto.randomUUID();
   const perWeekBudget = Math.floor(totalBudgetCop / weeklyPlans.length);
@@ -51,6 +52,7 @@ export async function persistGeneratedBatch(
           total_cost_cop: plan.totalCost,
           batch_id: batchId,
           week_number: weekNumber,
+          people,
         })
         .select("id")
         .single();

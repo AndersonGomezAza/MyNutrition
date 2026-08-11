@@ -18,6 +18,7 @@ export type Batch = {
   source: string;
   createdAt: string;
   isActive: boolean;
+  people: number;
   weeks: BatchWeek[];
   totalCost: number;
 };
@@ -35,7 +36,7 @@ export async function listBatches(
   const { data: lists, error } = await supabase
     .from("shopping_lists")
     .select(
-      "id, label, total_cost_cop, batch_id, week_number, source, created_at, is_active, stores(display_name)"
+      "id, label, total_cost_cop, batch_id, week_number, source, created_at, is_active, people, stores(display_name)"
     )
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -74,6 +75,7 @@ export async function listBatches(
       source: rows[0].source,
       createdAt: rows[0].created_at,
       isActive: rows[0].is_active,
+      people: rows[0].people,
       weeks,
       totalCost: weeks.reduce((s, w) => s + (w.totalCost ?? 0), 0),
     });
